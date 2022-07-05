@@ -1,0 +1,1865 @@
+<!DOCTYPE html>
+<!-- saved from url=(0074)https://docs.microsoft.com/en-us/azure/aks/tutorial-kubernetes-prepare-app -->
+<html class="hasSidebar hasPageActions hasBreadcrumb conceptual has-default-focus js-focus-visible theme-light" lang="en-us" dir="ltr" data-css-variable-support="true" data-authenticated="false" data-auth-status-determined="true" data-target="docs" x-ms-format-detection="none" data-js-focus-visible=""><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta property="og:title" content="Kubernetes on Azure tutorial  - Prepare an application - Azure Kubernetes Service">
+	<meta property="og:type" content="website">
+	<meta property="og:url" content="https://docs.microsoft.com/en-us/azure/aks/tutorial-kubernetes-prepare-app">
+			<meta property="og:description" content="In this Azure Kubernetes Service (AKS) tutorial, you learn how to prepare and build a multi-container app with Docker Compose that you can then deploy to AKS.">
+
+	<meta property="og:image" content="https://docs.microsoft.com/en-us/media/logos/logo-ms-social.png">
+
+	<meta property="og:image:alt" content="Microsoft Logo">
+
+	<meta name="twitter:card" content="summary">
+
+	<meta name="twitter:site" content="@docsmsft">
+
+	<meta name="color-scheme" content="light dark">
+
+
+	<meta name="author" content="zr-msft">
+<meta name="breadcrumb_path" content="/azure/bread/toc.json">
+<meta name="depot_name" content="Azure.azure-documents">
+<meta name="description" content="In this Azure Kubernetes Service (AKS) tutorial, you learn how to prepare and build a multi-container app with Docker Compose that you can then deploy to AKS.">
+<meta name="document_id" content="65f634bf-2280-a093-5897-724310dafa2d">
+<meta name="document_version_independent_id" content="f11c0af7-bfaf-6d64-2c75-9015b0eb1f30">
+<meta name="gitcommit" content="https://github.com/MicrosoftDocs/azure-docs-pr/blob/846e83db43845d8db8d6ed140bb6a5a3da8179d5/articles/aks/tutorial-kubernetes-prepare-app.md">
+<meta name="learn_banner_products" content="azure">
+<meta name="locale" content="en-us">
+<meta name="ms.author" content="zarhoads">
+<meta name="ms.custom" content="mvc">
+<meta name="ms.date" content="01/12/2021">
+<meta name="ms.service" content="container-service">
+<meta name="ms.suite" content="office">
+<meta name="ms.topic" content="tutorial">
+<meta name="original_content_git_url" content="https://github.com/MicrosoftDocs/azure-docs-pr/blob/live/articles/aks/tutorial-kubernetes-prepare-app.md">
+<meta name="page_type" content="conceptual">
+<meta name="pdf_url_template" content="https://docs.microsoft.com/pdfstore/en-us/Azure.azure-documents/{branchName}{pdfName}">
+<meta name="recommendations" content="true">
+<meta name="schema" content="Conceptual">
+<meta name="services" content="container-service">
+<meta name="site_name" content="Docs">
+<meta name="toc_rel" content="toc.json">
+<meta name="uhfHeaderId" content="azure">
+<meta name="updated_at" content="2021-01-15 11:06 PM">
+<meta name="word_count" content="663">
+
+
+
+
+	<meta name="cmProducts" content="https://authoring-docs-microsoft.poolparty.biz/devrel/d44a5346-5de4-439c-b804-7b2a536cbb55" data-source="generated">
+
+	<meta name="cmProducts" content="https://authoring-docs-microsoft.poolparty.biz/devrel/68ec7f3a-2bc6-459f-b959-19beb729907d" data-source="generated">
+
+	
+
+	<meta name="scope" content="Azure">
+	<meta name="github_feedback_content_git_url" content="https://github.com/MicrosoftDocs/azure-docs/blob/main/articles/aks/tutorial-kubernetes-prepare-app.md">
+<link href="https://docs.microsoft.com/en-us/azure/aks/tutorial-kubernetes-prepare-app" rel="canonical">
+	<title>Kubernetes on Azure tutorial  - Prepare an application - Azure Kubernetes Service | Microsoft Docs</title>
+
+		<link rel="stylesheet" href="./1-Prepare-Application_files/9f4dd321.site-ltr.css">
+
+	
+
+	<script id="msdocs-script">
+	var msDocs = {
+		data: {
+			timeOrigin: Date.now(),
+			contentLocale: 'en-us',
+			contentDir: 'ltr',
+			userLocale: 'en-us',
+			userDir: 'ltr',
+			pageTemplate: 'Conceptual',
+			brand: 'azure',
+			context: {
+			},
+			hasBinaryRating: true,
+			hasGithubIssues: true,
+			showFeedbackReport: false,
+			enableTutorialFeedback: false,
+			feedbackSystem: 'GitHub',
+			feedbackGitHubRepo: 'MicrosoftDocs/azure-docs',
+			extendBreadcrumb: false,
+			isEditDisplayable: true,
+			hideViewSource: false,
+			hasPageActions: true,
+			hasBookmark: true,
+			hasShare: true,
+			hasRecommendations: true,
+			contributors: [
+						{ name: "zr-msft", url: "https://github.com/zr-msft" },
+						{ name: "Nickomang", url: "https://github.com/Nickomang" },
+						{ name: "laurenhughes", url: "https://github.com/laurenhughes" },
+						{ name: "Potapy4", url: "https://github.com/Potapy4" },
+						{ name: "mlhoop", url: "https://github.com/mlhoop" },
+						{ name: "iainfoulds", url: "https://github.com/iainfoulds" },
+						{ name: "mufeez-amjad", url: "https://github.com/mufeez-amjad" },
+						{ name: "neilpeterson", url: "https://github.com/neilpeterson" },
+						{ name: "chlowell", url: "https://github.com/chlowell" }
+],
+		},
+		functions:{}
+	};
+	</script>
+	<script src="./1-Prepare-Application_files/wcp-consent.js.download"></script>
+	<script src="./1-Prepare-Application_files/ms.jsll-3.min.js.download"></script>
+
+	<script src="./1-Prepare-Application_files/67a45209.deprecation.js.download"></script>
+		<script src="./1-Prepare-Application_files/3927084e.index-docs.js.download"></script><style></style>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"name":"Docs","position":1,"@type":"ListItem","item":"https://docs.microsoft.com/en-us/"},{"name":"Azure","position":2,"@type":"ListItem","item":"https://docs.microsoft.com/en-us/azure/"},{"name":"AKS","position":3,"@type":"ListItem","item":"https://docs.microsoft.com/en-us/azure/aks/"}]}</script></head>
+
+<body lang="en-us" dir="ltr">
+	<div class="header-holder has-default-focus">
+		<a href="https://docs.microsoft.com/en-us/azure/aks/tutorial-kubernetes-prepare-app#main" class="skip-to-main-link has-outline-color-text visually-hidden-until-focused position-fixed has-inner-focus focus-visible top-0 left-0 right-0 padding-xs has-text-centered has-body-background" tabindex="1">Skip to main content</a>
+
+		<div hidden="" id="cookie-consent-holder"></div>
+
+		<div id="unsupported-browser" style="
+			background-color: white;
+			color: black;
+			padding: 16px;
+			border-bottom: 1px solid grey;" hidden="">
+			<div style="max-width: 800px; margin: 0 auto;">
+				<p style="font-size: 24px">This browser is no longer supported.</p>
+				<p style="font-size: 16px; margin-top: 16px;">Upgrade to Microsoft Edge to take advantage of the latest features, security updates, and technical support.</p>
+				<div style="margin-top: 12px;">
+					<a href="https://go.microsoft.com/fwlink/p/?LinkID=2092881" style="
+						background-color: #0078d4;
+						border: 1px solid #0078d4;
+						color: white;
+						padding: 6px 12px;
+						border-radius: 2px;
+						display: inline-block;
+						">
+Download Microsoft Edge					</a>
+					<a href="https://docs.microsoft.com/en-US/lifecycle/faq/internet-explorer-microsoft-edge" style="
+							background-color: white;
+							padding: 6px 12px;
+							border: 1px solid #505050;
+							color: #171717;
+							border-radius: 2px;
+							display: inline-block;
+							">
+More info					</a>
+				</div>
+			</div>
+
+		</div>
+		<!-- liquid-tag banners global -->
+		<div id="headerAreaHolder" data-bi-name="header">
+<header role="banner" itemscope="itemscope" itemtype="http://schema.org/Organization"><!----> <div class="nav-bar"><!----> <div class="nav-bar-brand display-flex align-items-center padding-none margin-left-xs margin-left-none-tablet">
+		
+					<a class="nav-bar-button" itemprop="url" href="https://www.microsoft.com/" aria-label="Microsoft">
+						 <div class="nav-bar-logo" role="presentation" aria-hidden="true" itemprop="logo" itemscope="itemscope">
+				
+		<svg xmlns="http://www.w3.org/2000/svg" width="108" height="23" viewBox="72 72 337 74" preserveAspectRatio="xMidYMin slice">
+			<g data-name="MS-symbol">
+				<clippath>
+					<path transform="matrix(1 0 0 -1 0 216)" d="M0 216h482V0H0z"></path>
+				</clippath>
+				<g clip-path="url(#a)">
+					<path d="M394.942 104.59h-10.858v25.003h-7.38V104.59h-5.182v-5.965h5.182v-4.308c0-3.254 1.06-5.92 3.178-7.998 2.12-2.079 4.835-3.118 8.15-3.118.882 0 1.666.045 2.35.135a9.37 9.37 0 011.806.407v6.296c-.24-.14-.663-.31-1.265-.512-.603-.2-1.296-.3-2.078-.3-1.528 0-2.702.476-3.526 1.43-.824.954-1.235 2.365-1.235 4.232v3.736h10.858v-6.959l7.321-2.229v9.188h7.381v5.965h-7.38v14.49c0 1.91.345 3.254 1.038 4.037.693.783 1.782 1.175 3.27 1.175.42 0 .927-.1 1.52-.3a7.178 7.178 0 001.552-.724v6.025c-.463.261-1.23.502-2.305.723a15.742 15.742 0 01-3.178.331c-3.073 0-5.378-.817-6.914-2.455-1.537-1.637-2.305-4.102-2.305-7.396zm-48.407 9.73c0 3.233.733 5.703 2.2 7.411 1.465 1.707 3.564 2.56 6.295 2.56 2.652 0 4.67-.853 6.055-2.56 1.386-1.708 2.08-4.238 2.08-7.592 0-3.334-.719-5.849-2.155-7.547-1.436-1.697-3.45-2.545-6.04-2.545-2.67 0-4.745.888-6.22 2.666-1.477 1.777-2.215 4.313-2.215 7.607m-7.592.24c0-5.12 1.446-9.177 4.338-12.17 2.892-2.993 6.91-4.489 12.05-4.489 4.841 0 8.621 1.441 11.343 4.323 2.721 2.883 4.082 6.774 4.082 11.674 0 5.021-1.447 9.018-4.338 11.99-2.892 2.973-6.829 4.458-11.81 4.458-4.8 0-8.61-1.41-11.432-4.232-2.822-2.82-4.233-6.673-4.233-11.554m-16.417-7.802c0 1.045.331 1.863.994 2.456.662.592 2.128 1.34 4.398 2.243 2.912 1.166 4.956 2.476 6.131 3.932 1.175 1.456 1.762 3.22 1.762 5.287 0 2.912-1.12 5.252-3.359 7.02-2.24 1.767-5.267 2.65-9.083 2.65-1.285 0-2.706-.155-4.263-.467-1.556-.31-2.877-.707-3.96-1.19v-7.169a17.945 17.945 0 004.277 2.198c1.526.543 2.911.814 4.157.814 1.647 0 2.862-.23 3.645-.693.784-.46 1.175-1.235 1.175-2.319 0-1.005-.406-1.853-1.22-2.546-.813-.693-2.355-1.492-4.624-2.395-2.69-1.125-4.599-2.39-5.724-3.796-1.125-1.406-1.687-3.193-1.687-5.362 0-2.792 1.11-5.086 3.33-6.884 2.217-1.797 5.095-2.696 8.63-2.696 1.084 0 2.3.12 3.645.361 1.346.242 2.47.553 3.374.934v6.93c-.964-.644-2.089-1.195-3.374-1.658-1.286-.462-2.56-.693-3.826-.693-1.386 0-2.465.271-3.238.813-.774.543-1.16 1.286-1.16 2.23m-35.066 7.562c0 3.233.733 5.703 2.2 7.411 1.465 1.707 3.564 2.56 6.295 2.56 2.652 0 4.67-.853 6.055-2.56 1.386-1.708 2.08-4.238 2.08-7.592 0-3.334-.719-5.849-2.155-7.547-1.436-1.697-3.449-2.545-6.039-2.545-2.672 0-4.745.888-6.222 2.666-1.476 1.777-2.214 4.313-2.214 7.607m-7.592.24c0-5.12 1.446-9.177 4.338-12.17 2.893-2.993 6.91-4.489 12.051-4.489 4.84 0 8.621 1.441 11.342 4.323 2.721 2.883 4.082 6.774 4.082 11.674 0 5.021-1.446 9.018-4.338 11.99-2.892 2.973-6.828 4.458-11.809 4.458-4.8 0-8.61-1.41-11.433-4.232-2.822-2.82-4.233-6.673-4.233-11.554m-3.136-16.448c.582 0 1.105.041 1.567.121.462.08.853.18 1.175.301v7.38c-.382-.28-.939-.546-1.672-.798-.733-.25-1.622-.376-2.666-.376-1.788 0-3.299.753-4.534 2.26-1.235 1.505-1.853 3.825-1.853 6.958v15.635h-7.29V98.624h7.29v4.88h.12c.663-1.687 1.667-3.007 3.013-3.96 1.346-.954 2.962-1.432 4.85-1.432m-27.956 26.18c1.084 0 2.28-.25 3.585-.754a15.06 15.06 0 003.615-1.988v6.778c-1.165.663-2.485 1.165-3.962 1.506-1.475.342-3.098.512-4.865.512-4.559 0-8.265-1.44-11.116-4.323-2.852-2.88-4.278-6.562-4.278-11.04 0-4.98 1.456-9.083 4.37-12.307 2.91-3.224 7.037-4.835 12.38-4.835 1.366 0 2.746.176 4.143.527 1.395.352 2.504.758 3.328 1.22v6.99c-1.125-.824-2.274-1.462-3.45-1.914a9.966 9.966 0 00-3.599-.678c-2.872 0-5.192.934-6.959 2.802-1.768 1.868-2.652 4.388-2.652 7.562 0 3.132.85 5.573 2.546 7.32 1.697 1.748 4.002 2.621 6.914 2.621m-22.112 5.302h-7.29V98.624h7.29zm-8.044-39.916c0-1.205.437-2.214 1.311-3.028.874-.813 1.913-1.22 3.118-1.22 1.285 0 2.35.417 3.193 1.25.844.834 1.266 1.833 1.266 2.998 0 1.185-.432 2.18-1.296 2.982-.864.804-1.918 1.205-3.163 1.205-1.246 0-2.295-.406-3.148-1.219-.854-.815-1.28-1.803-1.28-2.968m-6.274-3.284v43.2h-7.5v-33.86h-.12l-13.408 33.86h-4.97l-13.738-33.86h-.09v33.86h-6.929v-43.2h10.755l12.412 32.024h.18l13.105-32.024z" class="fill-current-color color-text-subtle"></path>
+					<path d="M106.214 106.214H71.996V71.996h34.218z" fill="#f25022"></path>
+					<path d="M143.993 106.214h-34.218V71.996h34.218z" fill="#7fba00"></path>
+					<path d="M106.214 143.993H71.996v-34.218h34.218z" fill="#00a4ef"></path>
+					<path d="M143.993 143.993h-34.218v-34.218h34.218z" fill="#ffb900"></path>
+				</g>
+			</g>
+		</svg>
+	
+		  </div>
+					</a>
+			  
+	</div> 
+				
+		<div class="nav-bar-item is-hidden-tablet">
+			<div class="nav-bar-menu">
+				<button class="nav-bar-button is-title" title="Global navigation" aria-expanded="false">
+					<span class="nav-bar-menu-title"><!---->Documentation<!----></span>
+					<div class="nav-bar-burger">
+						<span></span>
+						<span></span>
+						<span></span>
+						<span class="nav-bar-burger-label"><!---->Global navigation<!----></span>
+					</div>
+				</button>
+			</div>
+		</div>
+	
+				
+		<nav class="nav-bar-nav" role="navigation" aria-label="Global">
+			<ul class="nav-bar-nav-list">
+				
+		<li class="nav-bar-item is-category">
+			<a class="nav-bar-button is-title has-hover-underline" itemprop="url" href="https://docs.microsoft.com/en-us/">
+				<span><!---->Docs<!----></span>
+			</a>
+		</li>
+	
+				<!---->
+				<li class="nav-bar-item">
+					<a class=" nav-bar-button has-hover-underline is-active" href="https://docs.microsoft.com/en-us/documentation">
+						<span><!---->Documentation<!----></span>
+					</a>
+				</li>
+		  <!---->
+				<li class="nav-bar-item">
+					<a class=" nav-bar-button has-hover-underline " href="https://docs.microsoft.com/en-us/learn/">
+						<span><!---->Learn<!----></span>
+					</a>
+				</li>
+		  <!---->
+				<li class="nav-bar-item">
+					<a class=" nav-bar-button has-hover-underline " href="https://docs.microsoft.com/en-us/answers/products/">
+						<span><!---->Q&amp;A<!----></span>
+					</a>
+				</li>
+		  <!---->
+				<li class="nav-bar-item">
+					<a class=" nav-bar-button has-hover-underline " href="https://docs.microsoft.com/en-us/samples/browse/">
+						<span><!---->Code Samples<!----></span>
+					</a>
+				</li>
+		  <!---->
+				<li class="nav-bar-item">
+					<a class=" nav-bar-button has-hover-underline " href="https://docs.microsoft.com/en-us/shows/">
+						<span><!---->Shows<!----></span>
+					</a>
+				</li>
+		  <!---->
+				<li class="nav-bar-item">
+					<a class=" nav-bar-button has-hover-underline " href="https://docs.microsoft.com/en-us/events/">
+						<span><!---->Events<!----></span>
+					</a>
+				</li>
+		  <!----> <li class="dropdown nav-bar-item" hidden="">
+		<button aria-expanded="false" class="dropdown-trigger nav-bar-button  has-hover-underline" aria-controls="ax-107">
+			<span><!---->More<!----></span>
+			<span class="nav-bar-button-chevron" aria-hidden="true">
+				<span class="docon docon-chevron-down-light expanded-indicator"></span>
+			</span>
+		</button>
+		<ul class="dropdown-menu" id="ax-107" aria-label="More">
+			<!---->
+				<li class="nav-bar-item" hidden="">
+					<a class=" nav-bar-button is-active" href="https://docs.microsoft.com/en-us/documentation">
+						Documentation
+					</a>
+				</li>
+		  <!---->
+				<li class="nav-bar-item" hidden="">
+					<a class=" nav-bar-button " href="https://docs.microsoft.com/en-us/learn/">
+						Learn
+					</a>
+				</li>
+		  <!---->
+				<li class="nav-bar-item" hidden="">
+					<a class=" nav-bar-button " href="https://docs.microsoft.com/en-us/answers/products/">
+						Q&amp;A
+					</a>
+				</li>
+		  <!---->
+				<li class="nav-bar-item" hidden="">
+					<a class=" nav-bar-button " href="https://docs.microsoft.com/en-us/samples/browse/">
+						Code Samples
+					</a>
+				</li>
+		  <!---->
+				<li class="nav-bar-item" hidden="">
+					<a class=" nav-bar-button " href="https://docs.microsoft.com/en-us/shows/">
+						Shows
+					</a>
+				</li>
+		  <!---->
+				<li class="nav-bar-item" hidden="">
+					<a class=" nav-bar-button " href="https://docs.microsoft.com/en-us/events/">
+						Events
+					</a>
+				</li>
+		  <!---->
+		</ul>
+	</li><!---->
+			</ul>
+		</nav>
+	
+				<span class="nav-bar-spacer"></span>
+				
+		<div class="nav-bar-search " id="ax-108" hidden="">
+			
+		<form class="nav-bar-search-form" method="GET" name="nav-bar-search-form" role="search" id="nav-bar-search-form" aria-label="Search" action="https://docs.microsoft.com/en-us/search/">
+			<div class="autocomplete" data-bi-name="autocomplete"><!---->
+			<div class="control ">
+				<input role="combobox" maxlength="100" aria-autocomplete="list" autocapitalize="off" autocomplete="off" autocorrect="off" spellcheck="false" id="site-search-input" class="autocomplete-input input input-sm
+						
+						" type="search" name="terms" aria-expanded="false" aria-owns="ax-109-listbox" aria-controls="ax-109-listbox" aria-activedescendant="" aria-label="Search" placeholder="Search" pattern=".*">
+
+				<span aria-hidden="true" class="icon is-small is-left" hidden="">
+					<span class="has-text-primary docon docon-undefined"></span>
+				</span>
+
+				<span aria-hidden="true" class="autocomplete-loader loader has-text-primary " hidden=""></span>
+			</div>
+
+			<ul class="autocomplete-suggestions is-vertically-scrollable" role="listbox" id="ax-109-listbox" aria-label="site-search-input-suggestions" hidden="">
+				
+				
+			</ul>
+		<!----></div>
+			<!-- mobile safari will not dispatch submit event unless there's a submit button that is not display:none -->
+			<button type="submit" class="visually-hidden" tabindex="-1" aria-hidden="true"></button>
+			<input name="category" hidden="" value="">
+			<input name="scope" hidden="" value="Azure">
+			
+			
+		</form>
+	
+		</div>
+		
+					<div class="nav-bar-search">
+						<!-- hidden when the width drops to tablet -->
+						
+		<form class="nav-bar-search-form" method="GET" name="nav-bar-search-form" role="search" id="nav-bar-search-form-desktop" aria-label="Search" action="https://docs.microsoft.com/en-us/search/">
+			<div class="autocomplete" data-bi-name="autocomplete"><!---->
+			<div class="control has-icons-left">
+				<input role="combobox" maxlength="100" aria-autocomplete="list" autocapitalize="off" autocomplete="off" autocorrect="off" spellcheck="false" id="ax-110" class="autocomplete-input input input-sm
+						control has-icons-left
+						" type="search" name="terms" aria-expanded="false" aria-owns="ax-111-listbox" aria-controls="ax-111-listbox" aria-activedescendant="" aria-label="Search" placeholder="Search" pattern=".*">
+
+				<span aria-hidden="true" class="icon is-small is-left">
+					<span class="has-text-primary docon docon-search"></span>
+				</span>
+
+				<span aria-hidden="true" class="autocomplete-loader loader has-text-primary " hidden=""></span>
+			</div>
+
+			<ul class="autocomplete-suggestions is-vertically-scrollable" role="listbox" id="ax-111-listbox" aria-label="ax-110-suggestions" hidden="">
+				
+				
+			</ul>
+		<!----></div>
+			<!-- mobile safari will not dispatch submit event unless there's a submit button that is not display:none -->
+			<button type="submit" class="visually-hidden" tabindex="-1" aria-hidden="true"></button>
+			<input name="category" hidden="" value="">
+			<input name="scope" hidden="" value="Azure">
+			
+			
+		</form>
+	
+					</div>
+			  
+		<div class="nav-bar-search " hidden="">
+			<div class="nav-bar-search-form-expander">
+				<button id="form-expander" class="nav-bar-button has-hover-underline " title="Search" aria-expanded="false" aria-controls="ax-108">
+					
+		<span class="is-visually-hidden-mobile"><!---->Search<!----></span>
+		<span class="icon margin-left-xxs" aria-hidden="true">
+			<span class="docon docon-search"></span>
+		</span>
+	
+				</button>
+			</div>
+		</div>
+	
+				
+		<div class="nav-bar-profile">
+			
+		<a class="docs-sign-in auth-status-determined not-authenticated" href="https://docs.microsoft.com/en-us/azure/aks/tutorial-kubernetes-prepare-app#"> Sign in </a>
+	 
+		<div class="dropdown has-caret auth-status-determined authenticated">
+			<button class="dropdown-trigger button-reset" aria-controls="user-menu" aria-expanded="false" aria-label="Your Account">
+				<figure class="image is-36x36">
+					<img class="has-body-background-medium border-radius-rounded" alt="" data-profile-property="avatarUrl">
+				</figure>
+			</button>
+			<div class="dropdown-menu box justify-content-flex-start has-body-background" id="user-menu" role="menu">
+				<div class="media is-user-dir">
+					<div class="media-left">
+						<figure class="image is-48x48" aria-hidden="true">
+							<img class="has-body-background-medium border-radius-rounded" aria-labelledby="displayName" alt="" data-profile-property="avatarUrl">
+						</figure>
+					</div>
+					<div class="media-content">
+						<h2 class="title font-size-lg">
+							<span id="displayName" class="is-inline-truncated has-max-width-200" data-profile-property="displayName"></span>
+						</h2>
+						<p class="subtitle font-size-sm margin-bottom-none">
+							<span class="is-inline-truncated has-max-width-200" data-profile-property="upn"></span>
+						</p>
+					</div>
+				</div>
+				<ul class="padding-top-xs padding-bottom-xs">
+					<li class="padding-bottom-xs">
+						<a data-profile-property="profileUrl" href="https://docs.microsoft.com/en-us/users/me/activity/"><!---->Profile<!----></a>
+					</li>
+					<li>
+						<a data-profile-property="settingsUrl" href="https://docs.microsoft.com/en-us/users/me/settings/"><!---->Settings<!----></a>
+					</li>
+				</ul>
+				<div class="border-top padding-top-xs">
+					<a class="docs-sign-out" href="https://docs.microsoft.com/en-us/azure/aks/tutorial-kubernetes-prepare-app#"><!---->Sign out<!----></a>
+				</div>
+			</div>
+		</div>
+	
+		</div>
+	
+			 <!----></div> <div class="nav-bar border-top is-hidden-mobile"><!----> 
+		<a class="nav-bar-button is-title has-hover-underline" itemprop="url" href="https://docs.microsoft.com/azure">
+			<span>
+				Azure
+				
+			</span>
+		</a>
+	 
+		
+		<nav class="nav-bar-nav" role="navigation" aria-label="Site">
+			<ul class="nav-bar-nav-list">
+				
+				<!----> <li class="dropdown nav-bar-item">
+		<button aria-expanded="false" class="dropdown-trigger nav-bar-button  has-hover-underline" aria-controls="ax-112">
+			<span><!---->Product documentation<!----></span>
+			<span class="nav-bar-button-chevron" aria-hidden="true">
+				<span class="docon docon-chevron-down-light expanded-indicator"></span>
+			</span>
+		</button>
+		<ul class="dropdown-menu" id="ax-112" aria-label="Product documentation">
+			<!---->
+				<li class="nav-bar-item">
+					<a class="has-external-link-indicator nav-bar-button " href="https://docs.microsoft.com/en-us/azure/?product=compute">
+						Compute
+					</a>
+				</li>
+		  <!---->
+				<li class="nav-bar-item">
+					<a class="has-external-link-indicator nav-bar-button " href="https://docs.microsoft.com/en-us/azure/?product=networking">
+						Networking
+					</a>
+				</li>
+		  <!---->
+				<li class="nav-bar-item">
+					<a class="has-external-link-indicator nav-bar-button " href="https://docs.microsoft.com/en-us/azure/?product=storage">
+						Storage
+					</a>
+				</li>
+		  <!---->
+				<li class="nav-bar-item">
+					<a class="has-external-link-indicator nav-bar-button " href="https://docs.microsoft.com/en-us/azure/?product=web">
+						Web
+					</a>
+				</li>
+		  <!---->
+				<li class="nav-bar-item">
+					<a class="has-external-link-indicator nav-bar-button " href="https://docs.microsoft.com/en-us/azure/?product=mobile">
+						Mobile
+					</a>
+				</li>
+		  <!---->
+				<li class="nav-bar-item">
+					<a class="has-external-link-indicator nav-bar-button " href="https://docs.microsoft.com/en-us/azure/?product=containers">
+						Containers
+					</a>
+				</li>
+		  <!---->
+				<li class="nav-bar-item">
+					<a class="has-external-link-indicator nav-bar-button " href="https://docs.microsoft.com/en-us/azure/?product=databases">
+						Databases
+					</a>
+				</li>
+		  <!---->
+				<li class="nav-bar-item">
+					<a class="has-external-link-indicator nav-bar-button " href="https://docs.microsoft.com/en-us/azure">
+						All products
+					</a>
+				</li>
+		  <!---->
+		</ul>
+	</li><!----> <li class="dropdown nav-bar-item">
+		<button aria-expanded="false" class="dropdown-trigger nav-bar-button  has-hover-underline" aria-controls="ax-113">
+			<span><!---->Architecture<!----></span>
+			<span class="nav-bar-button-chevron" aria-hidden="true">
+				<span class="docon docon-chevron-down-light expanded-indicator"></span>
+			</span>
+		</button>
+		<ul class="dropdown-menu" id="ax-113" aria-label="Architecture">
+			<!---->
+				<li class="nav-bar-item">
+					<a class="has-external-link-indicator nav-bar-button " href="https://docs.microsoft.com/en-us/azure/architecture/guide/">
+						Get started
+					</a>
+				</li>
+		  <!---->
+				<li class="nav-bar-item">
+					<a class="has-external-link-indicator nav-bar-button " href="https://docs.microsoft.com/en-us/azure/architecture/architectures/reference-architectures">
+						Reference architectures
+					</a>
+				</li>
+		  <!---->
+				<li class="nav-bar-item">
+					<a class="has-external-link-indicator nav-bar-button " href="https://docs.microsoft.com/en-us/azure/cloud-adoption-framework/">
+						Cloud Adoption Framework for Azure
+					</a>
+				</li>
+		  <!---->
+				<li class="nav-bar-item">
+					<a class="has-external-link-indicator nav-bar-button " href="https://docs.microsoft.com/en-us/azure/architecture/framework/">
+						Azure Well-Architected Framework
+					</a>
+				</li>
+		  <!---->
+				<li class="nav-bar-item">
+					<a class="has-external-link-indicator nav-bar-button " href="https://docs.microsoft.com/en-us/azure/architecture/patterns/">
+						Design patterns
+					</a>
+				</li>
+		  <!---->
+				<li class="nav-bar-item">
+					<a class="has-external-link-indicator nav-bar-button " href="https://docs.microsoft.com/en-us/assessments/">
+						Assessments
+					</a>
+				</li>
+		  <!---->
+		</ul>
+	</li><!----> <li class="dropdown nav-bar-item">
+		<button aria-expanded="false" class="dropdown-trigger nav-bar-button  has-hover-underline" aria-controls="ax-114">
+			<span><!---->Learn Azure<!----></span>
+			<span class="nav-bar-button-chevron" aria-hidden="true">
+				<span class="docon docon-chevron-down-light expanded-indicator"></span>
+			</span>
+		</button>
+		<ul class="dropdown-menu" id="ax-114" aria-label="Learn Azure">
+			<!---->
+				<li class="nav-bar-item">
+					<a class="has-external-link-indicator nav-bar-button " href="https://docs.microsoft.com/en-us/learn/azure/">
+						Self-paced learning paths
+					</a>
+				</li>
+		  <!---->
+				<li class="nav-bar-item">
+					<a class="has-external-link-indicator nav-bar-button " href="https://go.microsoft.com/fwlink/?linkid=2012831">
+						Pluralsight
+					</a>
+				</li>
+		  <!---->
+				<li class="nav-bar-item">
+					<a class="has-external-link-indicator nav-bar-button " href="https://docs.microsoft.com/en-us/learn/certifications/courses/browse/?products=azure">
+						Instructor-led courses
+					</a>
+				</li>
+		  <!---->
+		</ul>
+	</li><!----> <li class="dropdown nav-bar-item">
+		<button aria-expanded="false" class="dropdown-trigger nav-bar-button  has-hover-underline" aria-controls="ax-115">
+			<span><!---->Develop<!----></span>
+			<span class="nav-bar-button-chevron" aria-hidden="true">
+				<span class="docon docon-chevron-down-light expanded-indicator"></span>
+			</span>
+		</button>
+		<ul class="dropdown-menu" id="ax-115" aria-label="Develop">
+			<!---->
+				<li class="nav-bar-item">
+					<a class="has-external-link-indicator nav-bar-button " href="https://docs.microsoft.com/en-us/azure/python/">
+						Python
+					</a>
+				</li>
+		  <!---->
+				<li class="nav-bar-item">
+					<a class="has-external-link-indicator nav-bar-button " href="https://docs.microsoft.com/en-us/dotnet/azure/">
+						.NET
+					</a>
+				</li>
+		  <!---->
+				<li class="nav-bar-item">
+					<a class="has-external-link-indicator nav-bar-button " href="https://docs.microsoft.com/en-us/azure/javascript/">
+						JavaScript
+					</a>
+				</li>
+		  <!---->
+				<li class="nav-bar-item">
+					<a class="has-external-link-indicator nav-bar-button " href="https://docs.microsoft.com/en-us/azure/java/">
+						Java
+					</a>
+				</li>
+		  <!---->
+				<li class="nav-bar-item">
+					<a class="has-external-link-indicator nav-bar-button " href="https://docs.microsoft.com/en-us/azure/go/">
+						Go
+					</a>
+				</li>
+		  <!---->
+		</ul>
+	</li><!----> <li class="dropdown nav-bar-item">
+		<button aria-expanded="false" class="dropdown-trigger nav-bar-button  has-hover-underline" aria-controls="ax-116">
+			<span><!---->Resources<!----></span>
+			<span class="nav-bar-button-chevron" aria-hidden="true">
+				<span class="docon docon-chevron-down-light expanded-indicator"></span>
+			</span>
+		</button>
+		<ul class="dropdown-menu" id="ax-116" aria-label="Resources">
+			<!---->
+				<li class="nav-bar-item">
+					<a class="has-external-link-indicator nav-bar-button " href="https://azure.microsoft.com/pricing/">
+						Pricing
+					</a>
+				</li>
+		  <!---->
+				<li class="nav-bar-item">
+					<a class="has-external-link-indicator nav-bar-button " href="https://azure.microsoft.com/overview/sales-number/">
+						Contact sales
+					</a>
+				</li>
+		  <!---->
+				<li class="nav-bar-item">
+					<a class="has-external-link-indicator nav-bar-button " href="https://azure.microsoft.com/resources/videos/home/">
+						Videos
+					</a>
+				</li>
+		  <!---->
+				<li class="nav-bar-item">
+					<a class="has-external-link-indicator nav-bar-button " href="https://azure.microsoft.com/overview/webinars/">
+						Webinars
+					</a>
+				</li>
+		  <!---->
+				<li class="nav-bar-item">
+					<a class="has-external-link-indicator nav-bar-button " href="https://azure.microsoft.com/updates/">
+						Updates
+					</a>
+				</li>
+		  <!---->
+				<li class="nav-bar-item">
+					<a class="has-external-link-indicator nav-bar-button " href="https://azure.microsoft.com/resources/whitepapers/">
+						White papers
+					</a>
+				</li>
+		  <!---->
+				<li class="nav-bar-item">
+					<a class="has-external-link-indicator nav-bar-button " href="https://azure.microsoft.com/blog/">
+						Blog
+					</a>
+				</li>
+		  <!---->
+				<li class="nav-bar-item">
+					<a class="has-external-link-indicator nav-bar-button " href="https://azure.microsoft.com/support/options/">
+						Support
+					</a>
+				</li>
+		  <!---->
+		</ul>
+	</li><!----> <li class="dropdown nav-bar-item" hidden="">
+		<button aria-expanded="false" class="dropdown-trigger nav-bar-button  has-hover-underline" aria-controls="ax-117">
+			<span><!---->More<!----></span>
+			<span class="nav-bar-button-chevron" aria-hidden="true">
+				<span class="docon docon-chevron-down-light expanded-indicator"></span>
+			</span>
+		</button>
+		<ul class="dropdown-menu" id="ax-117" aria-label="More">
+			<!----> <li class="dropdown nav-bar-item" hidden="">
+		<button aria-expanded="false" class="dropdown-trigger nav-bar-button  " aria-controls="ax-118">
+			<span><!---->Product documentation<!----></span>
+			<span class="nav-bar-button-chevron" aria-hidden="true">
+				<span class="docon docon-chevron-right-light "></span>
+			</span>
+		</button>
+		<ul class="dropdown-menu" id="ax-118" aria-label="Product documentation">
+			<!---->
+				<li class="nav-bar-item">
+					<a class="has-external-link-indicator nav-bar-button " href="https://docs.microsoft.com/en-us/azure/?product=compute">
+						Compute
+					</a>
+				</li>
+		  <!---->
+				<li class="nav-bar-item">
+					<a class="has-external-link-indicator nav-bar-button " href="https://docs.microsoft.com/en-us/azure/?product=networking">
+						Networking
+					</a>
+				</li>
+		  <!---->
+				<li class="nav-bar-item">
+					<a class="has-external-link-indicator nav-bar-button " href="https://docs.microsoft.com/en-us/azure/?product=storage">
+						Storage
+					</a>
+				</li>
+		  <!---->
+				<li class="nav-bar-item">
+					<a class="has-external-link-indicator nav-bar-button " href="https://docs.microsoft.com/en-us/azure/?product=web">
+						Web
+					</a>
+				</li>
+		  <!---->
+				<li class="nav-bar-item">
+					<a class="has-external-link-indicator nav-bar-button " href="https://docs.microsoft.com/en-us/azure/?product=mobile">
+						Mobile
+					</a>
+				</li>
+		  <!---->
+				<li class="nav-bar-item">
+					<a class="has-external-link-indicator nav-bar-button " href="https://docs.microsoft.com/en-us/azure/?product=containers">
+						Containers
+					</a>
+				</li>
+		  <!---->
+				<li class="nav-bar-item">
+					<a class="has-external-link-indicator nav-bar-button " href="https://docs.microsoft.com/en-us/azure/?product=databases">
+						Databases
+					</a>
+				</li>
+		  <!---->
+				<li class="nav-bar-item">
+					<a class="has-external-link-indicator nav-bar-button " href="https://docs.microsoft.com/en-us/azure">
+						All products
+					</a>
+				</li>
+		  <!---->
+		</ul>
+	</li><!----> <li class="dropdown nav-bar-item" hidden="">
+		<button aria-expanded="false" class="dropdown-trigger nav-bar-button  " aria-controls="ax-119">
+			<span><!---->Architecture<!----></span>
+			<span class="nav-bar-button-chevron" aria-hidden="true">
+				<span class="docon docon-chevron-right-light "></span>
+			</span>
+		</button>
+		<ul class="dropdown-menu" id="ax-119" aria-label="Architecture">
+			<!---->
+				<li class="nav-bar-item">
+					<a class="has-external-link-indicator nav-bar-button " href="https://docs.microsoft.com/en-us/azure/architecture/guide/">
+						Get started
+					</a>
+				</li>
+		  <!---->
+				<li class="nav-bar-item">
+					<a class="has-external-link-indicator nav-bar-button " href="https://docs.microsoft.com/en-us/azure/architecture/architectures/reference-architectures">
+						Reference architectures
+					</a>
+				</li>
+		  <!---->
+				<li class="nav-bar-item">
+					<a class="has-external-link-indicator nav-bar-button " href="https://docs.microsoft.com/en-us/azure/cloud-adoption-framework/">
+						Cloud Adoption Framework for Azure
+					</a>
+				</li>
+		  <!---->
+				<li class="nav-bar-item">
+					<a class="has-external-link-indicator nav-bar-button " href="https://docs.microsoft.com/en-us/azure/architecture/framework/">
+						Azure Well-Architected Framework
+					</a>
+				</li>
+		  <!---->
+				<li class="nav-bar-item">
+					<a class="has-external-link-indicator nav-bar-button " href="https://docs.microsoft.com/en-us/azure/architecture/patterns/">
+						Design patterns
+					</a>
+				</li>
+		  <!---->
+				<li class="nav-bar-item">
+					<a class="has-external-link-indicator nav-bar-button " href="https://docs.microsoft.com/en-us/assessments/">
+						Assessments
+					</a>
+				</li>
+		  <!---->
+		</ul>
+	</li><!----> <li class="dropdown nav-bar-item" hidden="">
+		<button aria-expanded="false" class="dropdown-trigger nav-bar-button  " aria-controls="ax-120">
+			<span><!---->Learn Azure<!----></span>
+			<span class="nav-bar-button-chevron" aria-hidden="true">
+				<span class="docon docon-chevron-right-light "></span>
+			</span>
+		</button>
+		<ul class="dropdown-menu" id="ax-120" aria-label="Learn Azure">
+			<!---->
+				<li class="nav-bar-item">
+					<a class="has-external-link-indicator nav-bar-button " href="https://docs.microsoft.com/en-us/learn/azure/">
+						Self-paced learning paths
+					</a>
+				</li>
+		  <!---->
+				<li class="nav-bar-item">
+					<a class="has-external-link-indicator nav-bar-button " href="https://go.microsoft.com/fwlink/?linkid=2012831">
+						Pluralsight
+					</a>
+				</li>
+		  <!---->
+				<li class="nav-bar-item">
+					<a class="has-external-link-indicator nav-bar-button " href="https://docs.microsoft.com/en-us/learn/certifications/courses/browse/?products=azure">
+						Instructor-led courses
+					</a>
+				</li>
+		  <!---->
+		</ul>
+	</li><!----> <li class="dropdown nav-bar-item" hidden="">
+		<button aria-expanded="false" class="dropdown-trigger nav-bar-button  " aria-controls="ax-121">
+			<span><!---->Develop<!----></span>
+			<span class="nav-bar-button-chevron" aria-hidden="true">
+				<span class="docon docon-chevron-right-light "></span>
+			</span>
+		</button>
+		<ul class="dropdown-menu" id="ax-121" aria-label="Develop">
+			<!---->
+				<li class="nav-bar-item">
+					<a class="has-external-link-indicator nav-bar-button " href="https://docs.microsoft.com/en-us/azure/python/">
+						Python
+					</a>
+				</li>
+		  <!---->
+				<li class="nav-bar-item">
+					<a class="has-external-link-indicator nav-bar-button " href="https://docs.microsoft.com/en-us/dotnet/azure/">
+						.NET
+					</a>
+				</li>
+		  <!---->
+				<li class="nav-bar-item">
+					<a class="has-external-link-indicator nav-bar-button " href="https://docs.microsoft.com/en-us/azure/javascript/">
+						JavaScript
+					</a>
+				</li>
+		  <!---->
+				<li class="nav-bar-item">
+					<a class="has-external-link-indicator nav-bar-button " href="https://docs.microsoft.com/en-us/azure/java/">
+						Java
+					</a>
+				</li>
+		  <!---->
+				<li class="nav-bar-item">
+					<a class="has-external-link-indicator nav-bar-button " href="https://docs.microsoft.com/en-us/azure/go/">
+						Go
+					</a>
+				</li>
+		  <!---->
+		</ul>
+	</li><!----> <li class="dropdown nav-bar-item" hidden="">
+		<button aria-expanded="false" class="dropdown-trigger nav-bar-button  " aria-controls="ax-122">
+			<span><!---->Resources<!----></span>
+			<span class="nav-bar-button-chevron" aria-hidden="true">
+				<span class="docon docon-chevron-right-light "></span>
+			</span>
+		</button>
+		<ul class="dropdown-menu" id="ax-122" aria-label="Resources">
+			<!---->
+				<li class="nav-bar-item">
+					<a class="has-external-link-indicator nav-bar-button " href="https://azure.microsoft.com/pricing/">
+						Pricing
+					</a>
+				</li>
+		  <!---->
+				<li class="nav-bar-item">
+					<a class="has-external-link-indicator nav-bar-button " href="https://azure.microsoft.com/overview/sales-number/">
+						Contact sales
+					</a>
+				</li>
+		  <!---->
+				<li class="nav-bar-item">
+					<a class="has-external-link-indicator nav-bar-button " href="https://azure.microsoft.com/resources/videos/home/">
+						Videos
+					</a>
+				</li>
+		  <!---->
+				<li class="nav-bar-item">
+					<a class="has-external-link-indicator nav-bar-button " href="https://azure.microsoft.com/overview/webinars/">
+						Webinars
+					</a>
+				</li>
+		  <!---->
+				<li class="nav-bar-item">
+					<a class="has-external-link-indicator nav-bar-button " href="https://azure.microsoft.com/updates/">
+						Updates
+					</a>
+				</li>
+		  <!---->
+				<li class="nav-bar-item">
+					<a class="has-external-link-indicator nav-bar-button " href="https://azure.microsoft.com/resources/whitepapers/">
+						White papers
+					</a>
+				</li>
+		  <!---->
+				<li class="nav-bar-item">
+					<a class="has-external-link-indicator nav-bar-button " href="https://azure.microsoft.com/blog/">
+						Blog
+					</a>
+				</li>
+		  <!---->
+				<li class="nav-bar-item">
+					<a class="has-external-link-indicator nav-bar-button " href="https://azure.microsoft.com/support/options/">
+						Support
+					</a>
+				</li>
+		  <!---->
+		</ul>
+	</li><!---->
+		</ul>
+	</li><!---->
+			</ul>
+		</nav>
+	
+		<span class="nav-bar-spacer"></span>
+		
+		<ol class="nav-bar-list">
+			
+		<li class="nav-bar-item has-spacing">
+			<a class="button button-sm button-primary " href="https://portal.azure.com/">
+				Portal
+			</a>
+		</li>
+	 
+		<li class="nav-bar-item ">
+			<a class="button button-sm button-primary button-filled" href="https://azure.microsoft.com/free/">
+				Free account
+			</a>
+		</li>
+	
+		</ol>
+	 
+	 <!----></div> <!----></header>		</div>
+
+
+			<div id="content-header" class="content-header uhf-container has-padding has-default-focus border-bottom-none" data-bi-name="content-header">
+				<div class="content-header-controls margin-xxs margin-inline-sm-tablet">
+					<button type="button" class="contents-button button button-sm margin-right-xxs" data-bi-name="contents-expand" aria-haspopup="true" data-contents-button="">
+						<span class="icon"><span class="docon docon-menu" aria-hidden="true"></span></span>
+						<span class="contents-expand-title">
+Table of contents						</span>
+					</button>
+					<button type="button" class="ap-collapse-behavior ap-expanded button button-sm" data-bi-name="ap-collapse" aria-controls="action-panel">
+						<span class="icon"><span class="docon docon-exit-mode" aria-hidden="true"></span></span>
+						<span>Exit focus mode</span>
+					</button>
+				</div>
+			</div>
+
+		<div id="disclaimer-holder" class="has-overflow-hidden has-default-focus">
+			<!-- liquid-tag banners sectional -->
+		</div>
+	</div>
+
+	<div class="mainContainer  uhf-container has-default-focus" data-bi-name="body">
+
+		<div class="columns has-large-gaps is-gapless-mobile ">
+
+			<div id="left-container" class="left-container is-hidden-mobile column is-one-third-tablet is-one-quarter-desktop">
+				<nav id="affixed-left-container" class="margin-top-sm-tablet position-fixed display-flex flex-direction-column" role="navigation" aria-label="Primary" data-bi-name="left toc" style="width: 260px; top: 24px; bottom: 24px;"><form action="javascript:" role="search" aria-label="Search" class="margin-bottom-xxs"><label class="visually-hidden" for="ax-123">Search</label><div class="autocomplete display-block" data-bi-name="autocomplete"><!---->
+			<div class="control has-icons-left">
+				<input role="combobox" maxlength="100" aria-autocomplete="list" autocapitalize="off" autocomplete="off" autocorrect="off" spellcheck="false" id="ax-123" class="autocomplete-input input input-sm
+						control has-icons-left
+						width-full" type="text" aria-expanded="false" aria-owns="ax-124-listbox" aria-controls="ax-124-listbox" aria-activedescendant="" placeholder="Filter by title" pattern=".*">
+
+				<span aria-hidden="true" class="icon is-small is-left">
+					<span class="has-text-primary docon docon-filter-settings"></span>
+				</span>
+
+				<span aria-hidden="true" class="autocomplete-loader loader has-text-primary " hidden=""></span>
+			</div>
+
+			<ul class="autocomplete-suggestions is-vertically-scrollable" role="listbox" id="ax-124-listbox" aria-label="ax-123-suggestions" hidden="">
+				
+				
+			</ul>
+		<!----></div></form><ul class="tree table-of-contents is-vertically-scrollable flex-grow-1 flex-shrink-1" role="tree" aria-label="Table of contents" data-bi-name="tree" data-is-collapsible="true"><li role="none"><a aria-setsize="8" aria-level="1" aria-posinset="1" role="treeitem" tabindex="-1" class="tree-item is-leaf has-external-link-indicator" data-bi-name="tree-leaf" href="https://docs.microsoft.com/en-us/azure/aks/">Azure Kubernetes Service (AKS)</a></li><li class="tree-item" aria-setsize="8" aria-level="1" aria-posinset="2" role="treeitem" tabindex="-1" id="title-2-1" aria-expanded="false"><span data-bi-name="tree-expander" class="tree-expander"><span class="tree-expander-indicator docon docon-chevron-right-light" aria-hidden="true"></span>Overview</span></li><li class="tree-item is-expanded" aria-setsize="8" aria-level="1" aria-posinset="3" role="treeitem" tabindex="-1" id="title-3-1" aria-expanded="true"><span data-bi-name="tree-expander" class="tree-expander"><span class="tree-expander-indicator docon docon-chevron-right-light" aria-hidden="true"></span>Quickstarts</span><ul class="tree-group" role="group"><li class="tree-item is-expanded" aria-setsize="4" aria-level="2" aria-posinset="1" role="treeitem" tabindex="-1" id="title-3-1_1-2" aria-expanded="true"><span data-bi-name="tree-expander" class="tree-expander"><span class="tree-expander-indicator docon docon-chevron-right-light" aria-hidden="true"></span>Deploy a Linux-based AKS Cluster</span><ul class="tree-group" role="group"><li role="none"><a aria-setsize="4" aria-level="3" aria-posinset="1" role="treeitem" tabindex="-1" class="tree-item is-leaf has-external-link-indicator" data-bi-name="tree-leaf" href="https://docs.microsoft.com/en-us/azure/aks/learn/quick-kubernetes-deploy-cli">Use the Azure CLI</a></li><li role="none"><a aria-setsize="4" aria-level="3" aria-posinset="2" role="treeitem" tabindex="-1" class="tree-item is-leaf has-external-link-indicator" data-bi-name="tree-leaf" href="https://docs.microsoft.com/en-us/azure/aks/learn/quick-kubernetes-deploy-powershell">Use Azure PowerShell</a></li><li role="none"><a aria-setsize="4" aria-level="3" aria-posinset="3" role="treeitem" tabindex="-1" class="tree-item is-leaf has-external-link-indicator" data-bi-name="tree-leaf" href="https://docs.microsoft.com/en-us/azure/aks/learn/quick-kubernetes-deploy-portal">Use the Azure portal</a></li><li role="none"><a aria-setsize="4" aria-level="3" aria-posinset="4" role="treeitem" tabindex="-1" class="tree-item is-leaf has-external-link-indicator" data-bi-name="tree-leaf" href="https://docs.microsoft.com/en-us/azure/aks/learn/quick-kubernetes-deploy-rm-template">Use ARM template</a></li></ul></li><li class="tree-item" aria-setsize="4" aria-level="2" aria-posinset="2" role="treeitem" tabindex="-1" id="title-3-1_2-2" aria-expanded="false"><span data-bi-name="tree-expander" class="tree-expander"><span class="tree-expander-indicator docon docon-chevron-right-light" aria-hidden="true"></span>Deploy a Windows-based AKS Cluster</span></li><li class="tree-item is-expanded" aria-setsize="4" aria-level="2" aria-posinset="3" role="treeitem" tabindex="-1" id="title-3-1_3-2" aria-expanded="true"><span data-bi-name="tree-expander" class="tree-expander"><span class="tree-expander-indicator docon docon-chevron-right-light" aria-hidden="true"></span>Develop applications</span><ul class="tree-group" role="group"><li role="none"><a aria-setsize="2" aria-level="3" aria-posinset="1" role="treeitem" tabindex="-1" class="tree-item is-leaf has-external-link-indicator" data-bi-name="tree-leaf" href="https://docs.microsoft.com/en-us/azure/aks/quickstart-helm">Develop with Helm</a></li><li role="none"><a aria-setsize="2" aria-level="3" aria-posinset="2" role="treeitem" tabindex="-1" class="tree-item is-leaf has-external-link-indicator" data-bi-name="tree-leaf" href="https://docs.microsoft.com/en-us/azure/aks/quickstart-dapr">Develop with Dapr</a></li></ul></li><li role="none"><a aria-setsize="4" aria-level="2" aria-posinset="4" role="treeitem" tabindex="-1" class="tree-item is-leaf has-external-link-indicator" data-bi-name="tree-leaf" href="https://docs.microsoft.com/en-us/azure/aks/quickstart-event-grid">Subscribe to AKS events with Event Grid (Preview)</a></li></ul></li><li class="tree-item is-expanded" aria-setsize="8" aria-level="1" aria-posinset="4" role="treeitem" tabindex="-1" id="title-4-1" aria-expanded="true"><span data-bi-name="tree-expander" class="tree-expander"><span class="tree-expander-indicator docon docon-chevron-right-light" aria-hidden="true"></span>Tutorials</span><ul class="tree-group" role="group"><li role="none"><a aria-setsize="7" aria-level="2" aria-posinset="1" role="treeitem" tabindex="0" class="tree-item is-leaf has-external-link-indicator is-selected" data-bi-name="tree-leaf" href="https://docs.microsoft.com/en-us/azure/aks/tutorial-kubernetes-prepare-app" aria-current="page">1 - Prepare application for AKS</a></li><li role="none"><a aria-setsize="7" aria-level="2" aria-posinset="2" role="treeitem" tabindex="-1" class="tree-item is-leaf has-external-link-indicator" data-bi-name="tree-leaf" href="https://docs.microsoft.com/en-us/azure/aks/tutorial-kubernetes-prepare-acr">2 - Create container registry</a></li><li role="none"><a aria-setsize="7" aria-level="2" aria-posinset="3" role="treeitem" tabindex="-1" class="tree-item is-leaf has-external-link-indicator" data-bi-name="tree-leaf" href="https://docs.microsoft.com/en-us/azure/aks/tutorial-kubernetes-deploy-cluster">3 - Create Kubernetes cluster</a></li><li role="none"><a aria-setsize="7" aria-level="2" aria-posinset="4" role="treeitem" tabindex="-1" class="tree-item is-leaf has-external-link-indicator" data-bi-name="tree-leaf" href="https://docs.microsoft.com/en-us/azure/aks/tutorial-kubernetes-deploy-application">4 - Run application</a></li><li role="none"><a aria-setsize="7" aria-level="2" aria-posinset="5" role="treeitem" tabindex="-1" class="tree-item is-leaf has-external-link-indicator" data-bi-name="tree-leaf" href="https://docs.microsoft.com/en-us/azure/aks/tutorial-kubernetes-scale">5 - Scale application</a></li><li role="none"><a aria-setsize="7" aria-level="2" aria-posinset="6" role="treeitem" tabindex="-1" class="tree-item is-leaf has-external-link-indicator" data-bi-name="tree-leaf" href="https://docs.microsoft.com/en-us/azure/aks/tutorial-kubernetes-app-update">6 - Update application</a></li><li role="none"><a aria-setsize="7" aria-level="2" aria-posinset="7" role="treeitem" tabindex="-1" class="tree-item is-leaf has-external-link-indicator" data-bi-name="tree-leaf" href="https://docs.microsoft.com/en-us/azure/aks/tutorial-kubernetes-upgrade-cluster">7 - Upgrade cluster</a></li></ul></li><li class="tree-item" aria-setsize="8" aria-level="1" aria-posinset="5" role="treeitem" tabindex="-1" id="title-5-1" aria-expanded="false"><span data-bi-name="tree-expander" class="tree-expander"><span class="tree-expander-indicator docon docon-chevron-right-light" aria-hidden="true"></span>Concepts</span></li><li class="tree-item" aria-setsize="8" aria-level="1" aria-posinset="6" role="treeitem" tabindex="-1" id="title-6-1" aria-expanded="false"><span data-bi-name="tree-expander" class="tree-expander"><span class="tree-expander-indicator docon docon-chevron-right-light" aria-hidden="true"></span>How-to guides</span></li><li class="tree-item" aria-setsize="8" aria-level="1" aria-posinset="7" role="treeitem" tabindex="-1" id="title-7-1" aria-expanded="false"><span data-bi-name="tree-expander" class="tree-expander"><span class="tree-expander-indicator docon docon-chevron-right-light" aria-hidden="true"></span>Reference</span></li><li class="tree-item" aria-setsize="8" aria-level="1" aria-posinset="8" role="treeitem" tabindex="-1" id="title-8-1" aria-expanded="false"><span data-bi-name="tree-expander" class="tree-expander"><span class="tree-expander-indicator docon docon-chevron-right-light" aria-hidden="true"></span>Resources</span></li></ul><a class="button button-sm button-clear justify-content-flex-start has-inner-focus margin-top-xxs border-top border-bottom flex-shrink-0" href="https://docs.microsoft.com/en-us/azure/opbuildpdf/aks/toc.pdf?branch=live" data-bi-name="downloadPdf" rel="nofollow"><!----> <span class="icon font-size-xs has-text-subtle">
+				<span aria-hidden="true" class="docon docon-dictionary-download"></span>
+			</span>
+			<span><!---->Download PDF<!----></span><!----></a></nav>
+			</div>
+
+			<!-- .primary-holder -->
+			<section class="primary-holder column is-two-thirds-tablet is-three-quarters-desktop">
+				<!--div.columns -->
+				<div class="columns is-gapless-mobile has-large-gaps ">
+
+
+					<div id="main-column" class="column  is-full is-8-desktop">
+
+						<main id="main" role="main" data-bi-name="content" lang="en-us" dir="ltr">
+							<!-- article-header -->
+							<div id="article-header" class="background-color-body margin-top-sm-tablet margin-bottom-xs">
+								<div class="display-flex align-items-center ">
+									<details id="article-header-breadcrumbs-overflow-popover" class="popover" data-for="article-header-breadcrumbs" hidden="">
+										<summary class="button button-clear button-primary button-sm">
+											<span class="icon">
+												<span class="docon docon-more"></span>
+											</span>
+										</summary>
+										<div id="article-header-breadcrumbs-overflow" class="popover-content padding-none"><!---->
+			<nav>
+				<ol class="list-style-none">
+					<!---->
+								<li class="line-clamp-1">
+									<a class="display-block has-inner-focus padding-inline-xs padding-block-xxs border-radius font-size-sm" href="https://docs.microsoft.com/en-us/">
+										Docs
+									</a>
+								</li>
+							<!----><!---->
+								<li class="line-clamp-1">
+									<a class="display-block has-inner-focus padding-inline-xs padding-block-xxs border-radius font-size-sm" href="https://docs.microsoft.com/en-us/azure/">
+										Azure
+									</a>
+								</li>
+							<!----><!---->
+								<li class="line-clamp-1">
+									<a class="display-block has-inner-focus padding-inline-xs padding-block-xxs border-radius font-size-sm" href="https://docs.microsoft.com/en-us/azure/aks/">
+										AKS
+									</a>
+								</li>
+							<!---->
+				</ol>
+			</nav>
+		<!----></div>
+									</details>
+									<bread-crumbs id="article-header-breadcrumbs" class="overflow-hidden flex-grow-1 margin-right-sm margin-right-md-tablet margin-right-lg-desktop" style="display: block; white-space: nowrap; overflow: hidden;"><!---->
+			<nav>
+				<ol class="breadcrumbs">
+					<!---->
+								<li class="breadcrumbs-item" data-bread-crumbs-collapse-target="">
+									<a href="https://docs.microsoft.com/en-us/"><!---->Docs<!----></a>
+								</li>
+							<!----><!---->
+								<li class="breadcrumbs-item" data-bread-crumbs-collapse-target="">
+									<a href="https://docs.microsoft.com/en-us/azure/"><!---->Azure<!----></a>
+								</li>
+							<!----><!---->
+								<li class="breadcrumbs-item" data-bread-crumbs-collapse-target="" style="">
+									<a href="https://docs.microsoft.com/en-us/azure/aks/" style=""><!---->AKS<!----></a>
+								</li>
+							<!---->
+				</ol>
+			</nav>
+		<!----></bread-crumbs>
+
+									<div id="article-header-page-actions" class="margin-left-auto display-flex flex-wrap-no-wrap align-items-stretch">
+
+										<a id="lang-link-tablet" class="button button-primary button-clear button-sm display-none display-inline-flex-tablet" title="Read in English" data-bi-name="language-toggle" data-read-in-link="" hidden="" href="https://docs.microsoft.com/en-us/azure/aks/tutorial-kubernetes-prepare-app" data-bi="{&quot;cN&quot;:&quot;language-toggle&quot;,&quot;value&quot;:&quot;off&quot;}">
+											<span class="icon margin-none" aria-hidden="true" data-read-in-link-icon="">
+												<span class="docon docon-locale-globe"></span>
+											</span>
+											<span class="is-visually-hidden" data-read-in-link-text="">Read in English</span>
+										</a>
+
+											<button type="button" class="collection button button-clear button-sm button-primary display-none display-inline-flex-tablet" data-list-type="collection" data-bi-name="collection" title="Add Kubernetes on Azure tutorial - Prepare an application - Azure Kubernetes Service | Microsoft Docs to a collection" data-pressed="false">
+												<span class="icon margin-none" aria-hidden="true">
+													<span class="docon docon-circle-addition"></span>
+												</span>
+												<span class="collection-status is-visually-hidden">Save</span>
+											</button>
+										
+
+										
+
+											<a data-feedback-section-link="" aria-label="Feedback" href="https://docs.microsoft.com/en-us/azure/aks/tutorial-kubernetes-prepare-app#feedback" class="button button-clear button-sm text-decoration-none button-primary display-none display-inline-flex-tablet" data-bi-name="comments" title="Send feedback about this page">
+												<span class="icon margin-none" aria-hidden="true">
+													<span class="docon docon-comment-lines"></span>
+												</span>
+											</a>
+										
+
+											<a data-contenteditbtn="" class="button button-clear button-sm text-decoration-none button-primary display-none display-inline-flex-tablet" aria-label="Edit" title="Edit This Document" data-bi-name="edit" href="https://github.com/MicrosoftDocs/azure-docs/blob/main/articles/aks/tutorial-kubernetes-prepare-app.md" data-original_content_git_url="https://github.com/MicrosoftDocs/azure-docs-pr/blob/live/articles/aks/tutorial-kubernetes-prepare-app.md" data-original_content_git_url_template="{repo}/blob/{branch}/articles/aks/tutorial-kubernetes-prepare-app.md" data-pr_repo="" data-pr_branch="">
+												<span class="icon margin-none" aria-hidden="true">
+													<span class="docon docon-edit-outline"></span>
+												</span>
+											</a>
+										
+
+
+										
+										<details class="popover popover-right" id="article-header-page-actions-overflow">
+											<summary class="justify-content-flex-start button button-clear button-sm button-primary" aria-label="More actions">
+												<span class="icon" aria-hidden="true">
+													<span class="docon docon-more-vertical"></span>
+												</span>
+											</summary>
+											<div class="popover-content padding-none">
+													<button data-page-action-item="overflow-mobile" type="button" class="justify-content-flex-start button-block button-sm has-inner-focus button button-clear display-none-tablet" aria-label="Contents" data-bi-name="contents-expand" data-contents-button="" data-popover-close="">
+														<span class="icon">
+															<span class="docon docon-editor-list-bullet" aria-hidden="true"></span>
+														</span>
+														<span class="contents-expand-title">Table of contents</span>
+													</button>
+
+												<a id="lang-link-overflow" class="justify-content-flex-start button-sm has-inner-focus button button-clear button-block display-none-tablet" title="Read in English" data-bi-name="language-toggle" data-page-action-item="overflow-mobile" data-check-hidden="true" data-read-in-link="" hidden="" href="https://docs.microsoft.com/en-us/azure/aks/tutorial-kubernetes-prepare-app" data-bi="{&quot;cN&quot;:&quot;language-toggle&quot;,&quot;value&quot;:&quot;off&quot;}">
+													<span class="icon" aria-hidden="true" data-read-in-link-icon="">
+														<span class="docon docon-locale-globe"></span>
+													</span>
+													<span data-read-in-link-text="">Read in English</span>
+												</a>
+
+													<button type="button" class="collection justify-content-flex-start button button-clear button-sm has-inner-focus button-block display-none-tablet" data-list-type="collection" data-bi-name="collection" title="Add Kubernetes on Azure tutorial - Prepare an application - Azure Kubernetes Service | Microsoft Docs to a collection" data-page-action-item="overflow-mobile" data-check-hidden="true" data-popover-close="" data-pressed="false">
+														<span class="icon" aria-hidden="true">
+															<span class="docon docon-circle-addition"></span>
+														</span>
+														<span class="collection-status">Save</span>
+													</button>
+
+
+													<a data-feedback-section-link="" aria-label="Feedback" href="https://docs.microsoft.com/en-us/azure/aks/tutorial-kubernetes-prepare-app#feedback" class="button button-clear button-block button-sm has-inner-focus justify-content-flex-start text-decoration-none display-none-tablet" data-bi-name="comments" title="Send feedback about this page" data-page-action-item="overflow-mobile">
+														<span class="icon" aria-hidden="true">
+															<span class="docon docon-comment-lines"></span>
+														</span>
+														<span>
+Feedback														</span>
+													</a>
+
+													<a data-contenteditbtn="" class="button button-clear button-block button-sm has-inner-focus justify-content-flex-start text-decoration-none display-none-tablet" aria-label="Edit" title="Edit This Document" data-bi-name="edit" href="https://github.com/MicrosoftDocs/azure-docs/blob/main/articles/aks/tutorial-kubernetes-prepare-app.md" data-original_content_git_url="https://github.com/MicrosoftDocs/azure-docs-pr/blob/live/articles/aks/tutorial-kubernetes-prepare-app.md" data-original_content_git_url_template="{repo}/blob/{branch}/articles/aks/tutorial-kubernetes-prepare-app.md" data-pr_repo="" data-pr_branch="">
+														<span class="icon" aria-hidden="true">
+															<span class="docon docon-edit-outline"></span>
+														</span>
+														<span>Edit</span>
+													</a>
+
+													<div aria-hidden="true" class="margin-none display-none-tablet border-top" data-page-action-item="overflow-all"></div>
+
+													
+														<a class="button button-clear button-sm has-inner-focus button-block text-decoration-none justify-content-flex-start share-twitter" data-bi-name="twitter" data-page-action-item="overflow-all" href="https://twitter.com/intent/tweet?original_referer=https%3A%2F%2Fdocs.microsoft.com%2Fen-us%2Fazure%2Faks%2Ftutorial-kubernetes-prepare-app%3FWT.mc_id%3Dtwitter&amp;text=Kubernetes%20on%20Azure%20tutorial%20-%20Prepare%20an%20application%20-%20Azure%20Kubernetes%20Service%20%7C%20Microsoft%20Docs&amp;tw_p=tweetbutton&amp;url=https%3A%2F%2Fdocs.microsoft.com%2Fen-us%2Fazure%2Faks%2Ftutorial-kubernetes-prepare-app%3FWT.mc_id%3Dtwitter">
+															<span class="icon" aria-hidden="true">
+																<span class="docon docon-brand-twitter"></span>
+															</span>
+															<span>Twitter</span>
+														</a>
+														<a class="button button-clear button-sm has-inner-focus button-block text-decoration-none justify-content-flex-start share-linkedin" data-bi-name="linkedin" data-page-action-item="overflow-all" href="https://www.linkedin.com/cws/share?url=https%3A%2F%2Fdocs.microsoft.com%2Fen-us%2Fazure%2Faks%2Ftutorial-kubernetes-prepare-app%3FWT.mc_id%3Dlinkedin">
+															<span class="icon" aria-hidden="true">
+																<span class="docon docon-brand-linkedin"></span>
+															</span>
+															<span>LinkedIn</span>
+														</a>
+														<a class="button button-clear button-sm button-block has-inner-focus text-decoration-none justify-content-flex-start share-facebook" data-bi-name="facebook" data-page-action-item="overflow-all" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdocs.microsoft.com%2Fen-us%2Fazure%2Faks%2Ftutorial-kubernetes-prepare-app%3FWT.mc_id%3Dfacebook">
+															<span class="icon" aria-hidden="true">
+																<span class="docon docon-brand-facebook"></span>
+															</span>
+															<span>Facebook</span>
+														</a>
+														<a class="button button-clear button-sm button-block has-inner-focus text-decoration-none justify-content-flex-start share-email" data-bi-name="email" data-page-action-item="overflow-all" href="mailto:?subject=%5BShared%20Article%5D%20Kubernetes%20on%20Azure%20tutorial%20-%20Prepare%20an%20application%20-%20Azure%20Kubernetes%20Service%20%7C%20Microsoft%20Docs&amp;body=Kubernetes%20on%20Azure%20tutorial%20-%20Prepare%20an%20application%20-%20Azure%20Kubernetes%20Service%20%7C%20Microsoft%20Docs%0A%0Ahttps%3A%2F%2Fdocs.microsoft.com%2Fen-us%2Fazure%2Faks%2Ftutorial-kubernetes-prepare-app%3FWT.mc_id%3Demail">
+															<span class="icon" aria-hidden="true">
+																<span class="docon docon-mail-message-fill"></span>
+															</span>
+															<span>Email</span>
+														</a>
+												
+											</div>
+										</details>
+										
+									</div>
+								</div>
+							</div>
+							<!-- end article-header -->
+
+
+							<div class="">
+								<button type="button" class="border contents-button button button-clear button-sm is-hidden-tablet has-inner-focus" aria-label="Contents" data-bi-name="contents-expand" data-contents-button="" hidden="">
+									<span class="icon">
+										<span class="docon docon-editor-list-bullet" aria-hidden="true"></span>
+									</span>
+									<span class="contents-expand-title">Table of contents</span>
+								</button>
+							</div>
+
+							<!-- end mobile-contents button  -->
+
+							<div class="content ">
+
+
+								<h1 id="tutorial-prepare-an-application-for-azure-kubernetes-service-aks">Tutorial: Prepare an application for Azure Kubernetes Service (AKS)</h1>
+
+
+									<div class="display-flex-tablet justify-content-space-between-tablet page-metadata-container">
+										<ul class="metadata page-metadata" data-bi-name="page info" lang="en-us" dir="ltr">
+												<li>
+Article												</li>
+												<li>
+													<time class="" data-article-date="" aria-label="Article review date" datetime="2021-01-15T23:06:00.000Z" data-article-date-source="git">01/16/2021</time>
+												</li>
+														<li class="readingTime">3 minutes to read</li>
+													<li class="contributors-holder">
+														<button aria-label="View all contributors" class="contributors-button link-button" data-bi-name="contributors" title="View all contributors">
+																9 contributors
+														</button>
+													</li>
+										</ul>
+
+<div id="user-feedback" class="display-flex" data-hide-on-archived="">
+	<button class="thumb-rating-button like link-button margin-xxs margin-right-none" data-binary-rating-response="rating-yes" title="This article is helpful" type="button" data-bi-name="rating-yes" data-bi-sat="1">
+		<span class="icon docon docon-like" aria-hidden="true"></span>
+	</button>
+	<button class="thumb-rating-button dislike link-button margin-xxs margin-right-none" data-binary-rating-response="rating-no" title="This article is not helpful" type="button" data-bi-name="rating-no" data-bi-sat="0">
+		<span class="icon docon docon-dislike" aria-hidden="true"></span>
+	</button>
+</div>
+									</div>
+
+										<nav id="center-doc-outline" class="doc-outline is-hidden-desktop" data-bi-name="intopic toc" role="navigation" aria-label="Article Outline"><!---->
+		<h3><!---->In this article<!----></h3>
+		<ol>
+			<!---->
+					<li>
+						<a href="https://docs.microsoft.com/en-us/azure/aks/tutorial-kubernetes-prepare-app#before-you-begin"><!---->Before you begin<!----></a>
+					</li>
+				<!---->
+					<li>
+						<a href="https://docs.microsoft.com/en-us/azure/aks/tutorial-kubernetes-prepare-app#get-application-code"><!---->Get application code<!----></a>
+					</li>
+				<!---->
+					<li>
+						<a href="https://docs.microsoft.com/en-us/azure/aks/tutorial-kubernetes-prepare-app#create-container-images"><!---->Create container images<!----></a>
+					</li>
+				<!---->
+					<li>
+						<a href="https://docs.microsoft.com/en-us/azure/aks/tutorial-kubernetes-prepare-app#test-application-locally"><!---->Test application locally<!----></a>
+					</li>
+				<!---->
+					<li>
+						<a href="https://docs.microsoft.com/en-us/azure/aks/tutorial-kubernetes-prepare-app#clean-up-resources"><!---->Clean up resources<!----></a>
+					</li>
+				<!---->
+					<li>
+						<a href="https://docs.microsoft.com/en-us/azure/aks/tutorial-kubernetes-prepare-app#next-steps"><!---->Next steps<!----></a>
+					</li>
+				<!---->
+		</ol>
+	<!----></nav>
+
+								<!-- <content> -->
+									<p>In this tutorial, part one of seven, a multi-container application is prepared for use in Kubernetes. Existing development tools such as Docker Compose are used to locally build and test an application. You learn how to:</p>
+<div class="checklist">
+<ul>
+<li>Clone a sample application source from GitHub</li>
+<li>Create a container image from the sample application source</li>
+<li>Test the multi-container application in a local Docker environment</li>
+</ul>
+</div>
+<p>Once completed, the following application runs in your local development environment:</p>
+<p><span class="mx-imgBorder">
+<a href="https://docs.microsoft.com/en-us/azure/aks/media/container-service-kubernetes-tutorials/azure-vote-local.png#lightbox" data-linktype="relative-path" class="lightbox-enabled" data-bi-name="lightbox" aria-haspopup="dialog">
+<img src="./1-Prepare-Application_files/azure-vote-local.png" alt="Screenshot showing the container image Azure Voting App running locally opened in a local web browser" data-linktype="relative-path">
+</a>
+</span>
+</p>
+<p>In later tutorials, the container image is uploaded to an Azure Container Registry, and then deployed into an AKS cluster.</p>
+<h2 id="before-you-begin" class="heading-anchor"><a class="anchor-link docon docon-link" href="https://docs.microsoft.com/en-us/azure/aks/tutorial-kubernetes-prepare-app#before-you-begin" aria-labelledby="before-you-begin"></a>Before you begin</h2>
+<p>This tutorial assumes a basic understanding of core Docker concepts such as containers, container images, and <code>docker</code> commands. For a primer on container basics, see <a href="https://docs.docker.com/get-started/" data-linktype="external">Get started with Docker</a>.</p>
+<p>To complete this tutorial, you need a local Docker development environment running Linux containers. Docker provides packages that configure Docker on a <a href="https://docs.docker.com/docker-for-mac/" data-linktype="external">Mac</a>, <a href="https://docs.docker.com/docker-for-windows/" data-linktype="external">Windows</a>, or <a href="https://docs.docker.com/engine/installation/#supported-platforms" data-linktype="external">Linux</a> system.</p>
+<div class="alert is-info">
+<p class="alert-title"><span class="docon docon-status-error-outline" aria-hidden="true"></span> Note</p>
+<p>Azure Cloud Shell does not include the Docker components required to complete every step in these tutorials. Therefore, we recommend using a full Docker development environment.</p>
+</div>
+<h2 id="get-application-code" class="heading-anchor"><a class="anchor-link docon docon-link" href="https://docs.microsoft.com/en-us/azure/aks/tutorial-kubernetes-prepare-app#get-application-code" aria-labelledby="get-application-code"></a>Get application code</h2>
+<p>The <a href="https://github.com/Azure-Samples/azure-voting-app-redis" data-linktype="external">sample application</a> used in this tutorial is a basic voting app consisting of a front-end web component and a back-end Redis instance. The web component is packaged into a custom container image. The Redis instance uses an unmodified image from Docker Hub.</p>
+<p>Use <a href="https://git-scm.com/downloads" data-linktype="external">git</a> to clone the sample application to your development environment:</p>
+<div class="codeHeader" id="code-try-0" data-bi-name="code-header"><span class="language">Console</span><button type="button" class="action position-relative" data-bi-name="copy" aria-label="Copy code">
+				<span class="icon margin-right-xxs">
+					<span class="docon docon-edit-copy" role="presentation"></span>
+				</span>
+				<span>Copy</span>
+				<div class="successful-copy-alert position-absolute right-0 top-0 left-0 bottom-0 display-flex align-items-center justify-content-center has-text-success-invert has-background-success is-transparent" aria-hidden="true">
+					<span class="icon font-size-lg">
+						<span class="docon docon-check-mark" role="presentation"></span>
+					</span>
+				</div>
+			</button></div><pre tabindex="0" class="has-inner-focus"><code class="lang-console" data-author-content="git clone https://github.com/Azure-Samples/azure-voting-app-redis.git
+"><span>git clone https://github.com/Azure-Samples/azure-voting-app-redis.git
+</span></code></pre>
+<p>Change into the cloned directory.</p>
+<div class="codeHeader" id="code-try-1" data-bi-name="code-header"><span class="language">Console</span><button type="button" class="action position-relative" data-bi-name="copy" aria-label="Copy code">
+				<span class="icon margin-right-xxs">
+					<span class="docon docon-edit-copy" role="presentation"></span>
+				</span>
+				<span>Copy</span>
+				<div class="successful-copy-alert position-absolute right-0 top-0 left-0 bottom-0 display-flex align-items-center justify-content-center has-text-success-invert has-background-success is-transparent" aria-hidden="true">
+					<span class="icon font-size-lg">
+						<span class="docon docon-check-mark" role="presentation"></span>
+					</span>
+				</div>
+			</button></div><pre tabindex="0" class="has-inner-focus"><code class="lang-console" data-author-content="cd azure-voting-app-redis
+"><span>cd azure-voting-app-redis
+</span></code></pre>
+<p>Inside the directory is the application source code, a pre-created Docker compose file, and a Kubernetes manifest file. These files are used throughout the tutorial set. The contents and structure of the directory are as follows:</p>
+<div class="codeHeader" id="code-try-2" data-bi-name="code-header"><span class="language">Output</span><button type="button" class="action position-relative" data-bi-name="copy" aria-label="Copy code">
+				<span class="icon margin-right-xxs">
+					<span class="docon docon-edit-copy" role="presentation"></span>
+				</span>
+				<span>Copy</span>
+				<div class="successful-copy-alert position-absolute right-0 top-0 left-0 bottom-0 display-flex align-items-center justify-content-center has-text-success-invert has-background-success is-transparent" aria-hidden="true">
+					<span class="icon font-size-lg">
+						<span class="docon docon-check-mark" role="presentation"></span>
+					</span>
+				</div>
+			</button></div><pre tabindex="0" class="has-inner-focus"><code class="lang-output" data-author-content="azure-voting-app-redis
+│   azure-vote-all-in-one-redis.yaml
+│   docker-compose.yaml
+│   LICENSE
+│   README.md
+│
+├───azure-vote
+│   │   app_init.supervisord.conf
+│   │   Dockerfile
+│   │   Dockerfile-for-app-service
+│   │   sshd_config
+│   │
+│   └───azure-vote
+│       │   config_file.cfg
+│       │   main.py
+│       │
+│       ├───static
+│       │       default.css
+│       │
+│       └───templates
+│               index.html
+│
+└───jenkins-tutorial
+        config-jenkins.sh
+        deploy-jenkins-vm.sh
+">azure-voting-app-redis
+│   azure-vote-all-in-one-redis.yaml
+│   docker-compose.yaml
+│   LICENSE
+│   README.md
+│
+├───azure-vote
+│   │   app_init.supervisord.conf
+│   │   Dockerfile
+│   │   Dockerfile-for-app-service
+│   │   sshd_config
+│   │
+│   └───azure-vote
+│       │   config_file.cfg
+│       │   main.py
+│       │
+│       ├───static
+│       │       default.css
+│       │
+│       └───templates
+│               index.html
+│
+└───jenkins-tutorial
+        config-jenkins.sh
+        deploy-jenkins-vm.sh
+</code></pre>
+<h2 id="create-container-images" class="heading-anchor"><a class="anchor-link docon docon-link" href="https://docs.microsoft.com/en-us/azure/aks/tutorial-kubernetes-prepare-app#create-container-images" aria-labelledby="create-container-images"></a>Create container images</h2>
+<p><a href="https://docs.docker.com/compose/" data-linktype="external">Docker Compose</a> can be used to automate building container images and the deployment of multi-container applications.</p>
+<p>Use the sample <code>docker-compose.yaml</code> file to create the container image, download the Redis image, and start the application:</p>
+<div class="codeHeader" id="code-try-3" data-bi-name="code-header"><span class="language">Console</span><button type="button" class="action position-relative" data-bi-name="copy" aria-label="Copy code">
+				<span class="icon margin-right-xxs">
+					<span class="docon docon-edit-copy" role="presentation"></span>
+				</span>
+				<span>Copy</span>
+				<div class="successful-copy-alert position-absolute right-0 top-0 left-0 bottom-0 display-flex align-items-center justify-content-center has-text-success-invert has-background-success is-transparent" aria-hidden="true">
+					<span class="icon font-size-lg">
+						<span class="docon docon-check-mark" role="presentation"></span>
+					</span>
+				</div>
+			</button></div><pre tabindex="0" class="has-inner-focus"><code class="lang-console" data-author-content="docker-compose up -d
+"><span>docker-compose up -d
+</span></code></pre>
+<p>When completed, use the <a href="https://docs.docker.com/engine/reference/commandline/images/" data-linktype="external">docker images</a> command to see the created images. Three images have been downloaded or created. The <em>azure-vote-front</em> image contains the front-end application and uses the <em>nginx-flask</em> image as a base. The <em>redis</em> image is used to start a Redis instance.</p>
+<div class="codeHeader" id="code-try-4" data-bi-name="code-header"><span class="language"></span><button type="button" class="action position-relative" data-bi-name="copy" aria-label="Copy code">
+				<span class="icon margin-right-xxs">
+					<span class="docon docon-edit-copy" role="presentation"></span>
+				</span>
+				<span>Copy</span>
+				<div class="successful-copy-alert position-absolute right-0 top-0 left-0 bottom-0 display-flex align-items-center justify-content-center has-text-success-invert has-background-success is-transparent" aria-hidden="true">
+					<span class="icon font-size-lg">
+						<span class="docon docon-check-mark" role="presentation"></span>
+					</span>
+				</div>
+			</button></div><pre tabindex="0" class="has-inner-focus"><code data-author-content="$ docker images
+
+REPOSITORY                                     TAG                 IMAGE ID            CREATED             SIZE
+mcr.microsoft.com/azuredocs/azure-vote-front   v1                  84b41c268ad9        9 seconds ago       944MB
+mcr.microsoft.com/oss/bitnami/redis            6.0.8               3a54a920bb6c        2 days ago          103MB
+tiangolo/uwsgi-nginx-flask                     python3.6           a16ce562e863        6 weeks ago         944MB
+">$ docker images
+
+REPOSITORY                                     TAG                 IMAGE ID            CREATED             SIZE
+mcr.microsoft.com/azuredocs/azure-vote-front   v1                  84b41c268ad9        9 seconds ago       944MB
+mcr.microsoft.com/oss/bitnami/redis            6.0.8               3a54a920bb6c        2 days ago          103MB
+tiangolo/uwsgi-nginx-flask                     python3.6           a16ce562e863        6 weeks ago         944MB
+</code></pre>
+<p>Run the <a href="https://docs.docker.com/engine/reference/commandline/ps/" data-linktype="external">docker ps</a> command to see the running containers:</p>
+<div class="codeHeader" id="code-try-5" data-bi-name="code-header"><span class="language"></span><button type="button" class="action position-relative" data-bi-name="copy" aria-label="Copy code">
+				<span class="icon margin-right-xxs">
+					<span class="docon docon-edit-copy" role="presentation"></span>
+				</span>
+				<span>Copy</span>
+				<div class="successful-copy-alert position-absolute right-0 top-0 left-0 bottom-0 display-flex align-items-center justify-content-center has-text-success-invert has-background-success is-transparent" aria-hidden="true">
+					<span class="icon font-size-lg">
+						<span class="docon docon-check-mark" role="presentation"></span>
+					</span>
+				</div>
+			</button></div><pre tabindex="0" class="has-inner-focus"><code data-author-content="$ docker ps
+
+CONTAINER ID        IMAGE                                             COMMAND                  CREATED             STATUS              PORTS                           NAMES
+d10e5244f237        mcr.microsoft.com/azuredocs/azure-vote-front:v1   &quot;/entrypoint.sh /sta…&quot;   3 minutes ago       Up 3 minutes        443/tcp, 0.0.0.0:8080-&gt;80/tcp   azure-vote-front
+21574cb38c1f        mcr.microsoft.com/oss/bitnami/redis:6.0.8         &quot;/opt/bitnami/script…&quot;   3 minutes ago       Up 3 minutes        0.0.0.0:6379-&gt;6379/tcp          azure-vote-back
+">$ docker ps
+
+CONTAINER ID        IMAGE                                             COMMAND                  CREATED             STATUS              PORTS                           NAMES
+d10e5244f237        mcr.microsoft.com/azuredocs/azure-vote-front:v1   "/entrypoint.sh /sta…"   3 minutes ago       Up 3 minutes        443/tcp, 0.0.0.0:8080-&gt;80/tcp   azure-vote-front
+21574cb38c1f        mcr.microsoft.com/oss/bitnami/redis:6.0.8         "/opt/bitnami/script…"   3 minutes ago       Up 3 minutes        0.0.0.0:6379-&gt;6379/tcp          azure-vote-back
+</code></pre>
+<h2 id="test-application-locally" class="heading-anchor"><a class="anchor-link docon docon-link" href="https://docs.microsoft.com/en-us/azure/aks/tutorial-kubernetes-prepare-app#test-application-locally" aria-labelledby="test-application-locally"></a>Test application locally</h2>
+<p>To see the running application, enter <code>http://localhost:8080</code> in a local web browser. The sample application loads, as shown in the following example:</p>
+<p><span class="mx-imgBorder">
+<a href="https://docs.microsoft.com/en-us/azure/aks/media/container-service-kubernetes-tutorials/azure-vote-local.png#lightbox" data-linktype="relative-path" class="lightbox-enabled" data-bi-name="lightbox" aria-haspopup="dialog">
+<img src="./1-Prepare-Application_files/azure-vote-local.png" alt="Screenshot showing the container image Azure Voting App running locally opened in a local web browser" data-linktype="relative-path">
+</a>
+</span>
+</p>
+<h2 id="clean-up-resources" class="heading-anchor"><a class="anchor-link docon docon-link" href="https://docs.microsoft.com/en-us/azure/aks/tutorial-kubernetes-prepare-app#clean-up-resources" aria-labelledby="clean-up-resources"></a>Clean up resources</h2>
+<p>Now that the application's functionality has been validated, the running containers can be stopped and removed. <em><strong>Do not delete the container images</strong></em> - in the next tutorial, the <em>azure-vote-front</em> image is uploaded to an Azure Container Registry instance.</p>
+<p>Stop and remove the container instances and resources with the <a href="https://docs.docker.com/compose/reference/down" data-linktype="external">docker-compose down</a> command:</p>
+<div class="codeHeader" id="code-try-6" data-bi-name="code-header"><span class="language">Console</span><button type="button" class="action position-relative" data-bi-name="copy" aria-label="Copy code">
+				<span class="icon margin-right-xxs">
+					<span class="docon docon-edit-copy" role="presentation"></span>
+				</span>
+				<span>Copy</span>
+				<div class="successful-copy-alert position-absolute right-0 top-0 left-0 bottom-0 display-flex align-items-center justify-content-center has-text-success-invert has-background-success is-transparent" aria-hidden="true">
+					<span class="icon font-size-lg">
+						<span class="docon docon-check-mark" role="presentation"></span>
+					</span>
+				</div>
+			</button></div><pre tabindex="0" class="has-inner-focus"><code class="lang-console" data-author-content="docker-compose down
+"><span>docker-compose down
+</span></code></pre>
+<p>When the local application has been removed, you have a Docker image that contains the Azure Vote application, <em>azure-vote-front</em>, for use with the next tutorial.</p>
+<h2 id="next-steps" class="heading-anchor"><a class="anchor-link docon docon-link" href="https://docs.microsoft.com/en-us/azure/aks/tutorial-kubernetes-prepare-app#next-steps" aria-labelledby="next-steps"></a>Next steps</h2>
+<p>In this tutorial, an application was tested and container images created for the application. You learned how to:</p>
+<div class="checklist">
+<ul>
+<li>Clone a sample application source from GitHub</li>
+<li>Create a container image from the sample application source</li>
+<li>Test the multi-container application in a local Docker environment</li>
+</ul>
+</div>
+<p>Advance to the next tutorial to learn how to store container images in Azure Container Registry.</p>
+<div class="nextstepaction">
+<p><a href="https://docs.microsoft.com/en-us/azure/aks/tutorial-kubernetes-prepare-acr" data-linktype="relative-path" class="button button-primary button-filled has-text-wrap">Push images to Azure Container Registry</a></p>
+</div>
+<!-- LINKS - external -->
+<!-- LINKS - internal -->
+
+							</div>
+							<!-- </content> -->
+
+						</main>
+
+
+
+
+						<!-- recommendations section -->
+							<section id="recommendations-section" data-bi-name="recommendations" class="margin-bottom-md margin-bottom-none-desktop"><!---->
+			<hr class="hr">
+			<h2 class="title is-3 margin-top-sm" id="recommended-content"><!---->Recommended content<!----></h2>
+			
+		<ul id="recommendations-list" aria-live="polite" aria-relevant="additions" aria-labelledby="recommended-content" class="margin-bottom-sm">
+			<!---->
+					<li class="margin-top-xs ">
+						<article class="card">
+							<div class="card-content">
+								<a class="card-content-title stretched-link" href="https://docs.microsoft.com/en-us/azure/aks/tutorial-kubernetes-deploy-application" data-bi-name="recommendation-item-0">
+									<h3><!---->Kubernetes on Azure tutorial  - Deploy an application - Azure Kubernetes Service<!----></h3>
+								</a>
+								<p class="card-content-description line-clamp-3"><!---->In this Azure Kubernetes Service (AKS) tutorial, you deploy a multi-container application to your cluster using a custom image stored in Azure Container Registry.<!----></p>
+							</div>
+						</article>
+					</li>
+				<!---->
+					<li class="margin-top-xs ">
+						<article class="card">
+							<div class="card-content">
+								<a class="card-content-title stretched-link" href="https://docs.microsoft.com/en-us/azure/aks/tutorial-kubernetes-prepare-acr" data-bi-name="recommendation-item-1">
+									<h3><!---->Kubernetes on Azure tutorial - Create a container registry - Azure Kubernetes Service<!----></h3>
+								</a>
+								<p class="card-content-description line-clamp-3"><!---->In this Azure Kubernetes Service (AKS) tutorial, you create an Azure Container Registry instance and upload a sample application container image.<!----></p>
+							</div>
+						</article>
+					</li>
+				<!---->
+					<li class="margin-top-xs ">
+						<article class="card">
+							<div class="card-content">
+								<a class="card-content-title stretched-link" href="https://docs.microsoft.com/en-us/azure/aks/tutorial-kubernetes-app-update" data-bi-name="recommendation-item-2">
+									<h3><!---->Kubernetes on Azure tutorial - Update an application - Azure Kubernetes Service<!----></h3>
+								</a>
+								<p class="card-content-description line-clamp-3"><!---->In this Azure Kubernetes Service (AKS) tutorial, you learn how to update an existing application deployment to AKS with a new version of the application code.<!----></p>
+							</div>
+						</article>
+					</li>
+				<!---->
+					<li class="margin-top-xs ">
+						<article class="card">
+							<div class="card-content">
+								<a class="card-content-title stretched-link" href="https://docs.microsoft.com/en-us/azure/aks/tutorial-kubernetes-deploy-cluster" data-bi-name="recommendation-item-3">
+									<h3><!---->Kubernetes on Azure tutorial - Deploy a cluster - Azure Kubernetes Service<!----></h3>
+								</a>
+								<p class="card-content-description line-clamp-3"><!---->In this Azure Kubernetes Service (AKS) tutorial, you create an AKS cluster and use kubectl to connect to the Kubernetes master node.<!----></p>
+							</div>
+						</article>
+					</li>
+				<!---->
+					<li class="margin-top-xs expandable">
+						<article class="card">
+							<div class="card-content">
+								<a class="card-content-title stretched-link" href="https://docs.microsoft.com/en-us/azure/aks/tutorial-kubernetes-upgrade-cluster" data-bi-name="recommendation-item-4">
+									<h3><!---->Kubernetes on Azure tutorial - Upgrade a cluster - Azure Kubernetes Service<!----></h3>
+								</a>
+								<p class="card-content-description line-clamp-3"><!---->In this Azure Kubernetes Service (AKS) tutorial, you learn how to upgrade an existing AKS cluster to the latest available Kubernetes version.<!----></p>
+							</div>
+						</article>
+					</li>
+				<!---->
+					<li class="margin-top-xs expandable">
+						<article class="card">
+							<div class="card-content">
+								<a class="card-content-title stretched-link" href="https://docs.microsoft.com/en-us/azure/aks/kubernetes-action" data-bi-name="recommendation-item-5">
+									<h3><!---->Build, test, and deploy containers to Azure Kubernetes Service using GitHub Actions - Azure Kubernetes Service<!----></h3>
+								</a>
+								<p class="card-content-description line-clamp-3"><!---->Learn how to use GitHub Actions to deploy your container to Kubernetes<!----></p>
+							</div>
+						</article>
+					</li>
+				<!---->
+					<li class="margin-top-xs expandable">
+						<article class="card">
+							<div class="card-content">
+								<a class="card-content-title stretched-link" href="https://docs.microsoft.com/en-us/azure/aks/quickstart-helm" data-bi-name="recommendation-item-6">
+									<h3><!---->Develop on Azure Kubernetes Service (AKS) with Helm - Azure Kubernetes Service<!----></h3>
+								</a>
+								<p class="card-content-description line-clamp-3"><!---->Use Helm with AKS and Azure Container Registry to package and run application containers in a cluster.<!----></p>
+							</div>
+						</article>
+					</li>
+				<!---->
+					<li class="margin-top-xs expandable">
+						<article class="card">
+							<div class="card-content">
+								<a class="card-content-title stretched-link" href="https://docs.microsoft.com/en-us/azure/aks/tutorial-kubernetes-scale" data-bi-name="recommendation-item-7">
+									<h3><!---->Kubernetes on Azure tutorial  - Scale Application - Azure Kubernetes Service<!----></h3>
+								</a>
+								<p class="card-content-description line-clamp-3"><!---->In this Azure Kubernetes Service (AKS) tutorial, you learn how to scale nodes and pods in Kubernetes, and implement horizontal pod autoscaling.<!----></p>
+							</div>
+						</article>
+					</li>
+				<!---->
+		</ul>
+		
+				<div class="buttons buttons-centered has-background-linethrough">
+					
+		<button aria-expanded="false" data-show-more="" class="button button-sm margin-bottom-none show-more-button" aria-controls="recommendations-list" data-bi-name="show-more-btn">
+			<span class="show-more-text"><!---->Show more<!----></span>
+			<span class="icon" aria-hidden="true">
+				<span class="expanded-indicator docon docon-chevron-down-light"></span>
+			</span>
+		</button>
+	
+				</div>
+		  
+	
+		<!----></section>
+							<section id="right-rail-recommendations-mobile" data-bi-name="recommendations" class="display-none-desktop margin-top-xxs" hidden=""></section>
+						<!-- end recommendations section -->
+
+							<section id="right-rail-learning-resources-mobile" class="display-none-desktop margin-top-xxs" data-bi-name="learning-resources-card" hidden=""></section>
+							<section id="right-rail-qna-mobile" class="display-none-desktop margin-top-xxs" data-bi-name="qna-link-card" hidden=""></section>
+
+						<!-- feedback section -->
+<section class="feedback-section position-relative" data-bi-name="feedback-section">
+
+    <h2 id="feedback" class="title is-3 margin-top-sm">Feedback</h2>
+
+    <div class="alert choose-feedback-type">
+        <p id="send-feedback-about">Submit and view feedback for</p>
+
+        <div class="choose-feedback-buttons margin-top-xs">
+                <a class="button has-external-link-indicator feedback-type-product margin-bottom-xxs" aria-label="Send feedback about this product" href="https://feedback.azure.com/d365community/forum/aabe212a-f724-ec11-b6e6-000d3a4f0da0" data-bi-name="product-feedback">
+                    <span>This product</span>
+                </a>
+
+			<a class="button feedback-type-product margin-bottom-xxs github-link" aria-label="Send feedback about this page" data-bi-name="create-issue-on-github" href="https://github.com/MicrosoftDocs/azure-docs/issues/new?title=&amp;body=%0A%0A%5BEnter%20feedback%20here%5D%0A%0A%0A---%0A%23%23%23%23%20Document%20Details%0A%0A%E2%9A%A0%20*Do%20not%20edit%20this%20section.%20It%20is%20required%20for%20docs.microsoft.com%20%E2%9E%9F%20GitHub%20issue%20linking.*%0A%0A*%20ID%3A%2065f634bf-2280-a093-5897-724310dafa2d%0A*%20Version%20Independent%20ID%3A%20f11c0af7-bfaf-6d64-2c75-9015b0eb1f30%0A*%20Content%3A%20%5BKubernetes%20on%20Azure%20tutorial%20%20-%20Prepare%20an%20application%20-%20Azure%20Kubernetes%20Service%5D(https%3A%2F%2Fdocs.microsoft.com%2Fen-us%2Fazure%2Faks%2Ftutorial-kubernetes-prepare-app)%0A*%20Content%20Source%3A%20%5Barticles%2Faks%2Ftutorial-kubernetes-prepare-app.md%5D(https%3A%2F%2Fgithub.com%2FMicrosoftDocs%2Fazure-docs%2Fblob%2Fmain%2Farticles%2Faks%2Ftutorial-kubernetes-prepare-app.md)%0A*%20Service%3A%20**container-service**%0A*%20GitHub%20Login%3A%20%40zr-msft%0A*%20Microsoft%20Alias%3A%20**zarhoads**">
+				<span aria-hidden="true" class="docon docon-brand-github padding-right-xxs"></span>
+				<span>This page</span>
+			</a>
+        </div>
+    </div>
+
+    <div class="action-container display-flex justify-content-flex-end margin-block-xxs">
+        <a class="view-on-github has-external-link-indicator" data-bi-name="view-on-github" href="https://github.com/MicrosoftDocs/azure-docs/issues?utf8=%E2%9C%93&amp;q=%22f11c0af7-bfaf-6d64-2c75-9015b0eb1f30%22&amp;in=body">
+            <span aria-hidden="true" class="docon docon-brand-github"></span>
+            <span>View all page feedback</span>
+        </a>
+    </div>
+</section>
+						<!-- end feedback section -->
+
+						<!-- feedback report section -->
+						<!-- end feedback report section -->
+
+							<section id="right-rail-events-mobile" class="display-none-desktop margin-top-xs" data-bi-name="events-card" hidden=""></section>
+
+						<div class="border-top is-visible-interactive has-default-focus margin-top-sm ">
+
+
+
+	<footer id="footer-interactive" data-bi-name="footer" class="footer-layout">
+	<div class="display-flex is-full-height padding-right-lg-desktop">
+			<a data-mscc-ic="false" class="locale-selector-link button button-clear flex-shrink-0" href="https://docs.microsoft.com/en-us/locale?target=https://docs.microsoft.com/en-us/azure/aks/tutorial-kubernetes-prepare-app" data-bi-name="select-locale">
+					<span class="icon" aria-hidden="true">
+						<span class="docon docon-world"></span>
+					</span>
+					<span class="local-selector-link-text">English (United States)</span></a>
+		<div class="margin-inline-xs flex-shrink-0">
+<div class="dropdown has-caret-up">
+	<button class="dropdown-trigger button button-clear button-sm has-inner-focus theme-dropdown-trigger" aria-controls="theme-menu-interactive" aria-expanded="false" title="Theme" data-bi-name="theme">
+		<span class="icon">
+			<span class="docon docon-sun" aria-hidden="true"></span>
+		</span>
+		<span>Theme</span>
+	</button>
+	<div class="dropdown-menu" id="theme-menu-interactive" role="menu">
+		<ul class="theme-selector padding-xxs">
+			<li class="theme display-block">
+				<button class="button button-clear button-sm theme-control button-block justify-content-flex-start is-selected" data-theme-to="light" aria-pressed="true">
+					<span class="theme-light margin-right-xxs">
+						<span class="theme-selector-icon css-variable-support border display-inline-block has-body-background" aria-hidden="true">
+							<svg class="svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 14">
+								<rect width="22" height="14" class="has-fill-body-background"></rect>
+								<rect x="5" y="5" width="12" height="4" class="has-fill-secondary"></rect>
+								<rect x="5" y="2" width="2" height="1" class="has-fill-secondary"></rect>
+								<rect x="8" y="2" width="2" height="1" class="has-fill-secondary"></rect>
+								<rect x="11" y="2" width="3" height="1" class="has-fill-secondary"></rect>
+								<rect x="1" y="1" width="2" height="2" class="has-fill-secondary"></rect>
+								<rect x="5" y="10" width="7" height="2" rx="0.3" class="has-fill-primary"></rect>
+								<rect x="19" y="1" width="2" height="2" rx="1" class="has-fill-secondary"></rect>
+							</svg>
+						</span>
+					</span>
+					<span role="menuitem">
+Light					</span>
+				</button>
+			</li>
+			<li class="theme display-block">
+				<button class="button button-clear button-sm theme-control button-block justify-content-flex-start" data-theme-to="dark" aria-pressed="false">
+					<span class="theme-dark margin-right-xxs">
+						<span class="border theme-selector-icon css-variable-support display-inline-block has-body-background" aria-hidden="true">
+							<svg class="svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 14">
+								<rect width="22" height="14" class="has-fill-body-background"></rect>
+								<rect x="5" y="5" width="12" height="4" class="has-fill-secondary"></rect>
+								<rect x="5" y="2" width="2" height="1" class="has-fill-secondary"></rect>
+								<rect x="8" y="2" width="2" height="1" class="has-fill-secondary"></rect>
+								<rect x="11" y="2" width="3" height="1" class="has-fill-secondary"></rect>
+								<rect x="1" y="1" width="2" height="2" class="has-fill-secondary"></rect>
+								<rect x="5" y="10" width="7" height="2" rx="0.3" class="has-fill-primary"></rect>
+								<rect x="19" y="1" width="2" height="2" rx="1" class="has-fill-secondary"></rect>
+							</svg>
+						</span>
+					</span>
+					<span role="menuitem">
+Dark					</span>
+				</button>
+			</li>
+			<li class="theme display-block">
+				<button class="button button-clear button-sm theme-control button-block justify-content-flex-start" data-theme-to="high-contrast" aria-pressed="false">
+					<span class="theme-high-contrast margin-right-xxs">
+						<span class="border theme-selector-icon css-variable-support display-inline-block has-body-background" aria-hidden="true">
+							<svg class="svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 14">
+								<rect width="22" height="14" class="has-fill-body-background"></rect>
+								<rect x="5" y="5" width="12" height="4" class="has-fill-secondary"></rect>
+								<rect x="5" y="2" width="2" height="1" class="has-fill-secondary"></rect>
+								<rect x="8" y="2" width="2" height="1" class="has-fill-secondary"></rect>
+								<rect x="11" y="2" width="3" height="1" class="has-fill-secondary"></rect>
+								<rect x="1" y="1" width="2" height="2" class="has-fill-secondary"></rect>
+								<rect x="5" y="10" width="7" height="2" rx="0.3" class="has-fill-primary"></rect>
+								<rect x="19" y="1" width="2" height="2" rx="1" class="has-fill-secondary"></rect>
+							</svg>
+						</span>
+					</span>
+					<span role="menuitem">
+High contrast					</span>
+				</button>
+			</li>
+		</ul>
+	</div>
+</div>
+		</div>
+	</div>
+	<ul class="links" data-bi-name="footerlinks">
+		<li class="manage-cookies-holder" hidden=""></li>
+				<li><a data-mscc-ic="false" href="https://docs.microsoft.com/en-us/previous-versions/" data-bi-name="archivelink">Previous Version Docs</a></li>
+				<li><a data-mscc-ic="false" href="https://docs.microsoft.com/en-us/teamblog" data-bi-name="bloglink">Blog</a></li>
+				<li><a data-mscc-ic="false" href="https://docs.microsoft.com/en-us/contribute" data-bi-name="contributorGuide">Contribute</a></li>
+					<li><a data-mscc-ic="false" href="https://go.microsoft.com/fwlink/?LinkId=521839" data-bi-name="privacy">Privacy &amp; Cookies</a></li>
+				<li><a data-mscc-ic="false" href="https://docs.microsoft.com/en-us/legal/termsofuse" data-bi-name="termsofuse">Terms of Use</a></li>
+				<li><a data-mscc-ic="false" href="https://www.microsoft.com/en-us/legal/intellectualproperty/Trademarks/EN-US.aspx" data-bi-name="trademarks">Trademarks</a></li>
+		<li>© Microsoft 2022</li>
+	</ul>
+</footer>
+						</div>
+
+					</div>
+
+						<div class="font-size-sm right-container column is-4-desktop display-none display-block-desktop" data-bi-name="pageactions" role="complementary" aria-label="Page Actions">
+
+							<div id="affixed-right-container" class="margin-top-sm-tablet doc-outline is-vertically-scrollable" data-bi-name="right-column">
+								<section id="right-rail-events" data-bi-name="events-card" class="margin-bottom-xxs" hidden=""></section>
+								<section id="right-rail-recommendations" data-bi-name="recommendations" class="margin-bottom-xxs" hidden=""></section>
+								<nav id="side-doc-outline" data-bi-name="intopic toc" role="navigation" aria-label="Article Outline"><!---->
+		<article class="border border-radius-lg overflow-hidden ">
+			<div class="padding-block-xxs padding-inline-xs font-weight-semibold border-bottom font-size-md display-flex align-items-center background-color-body-medium">
+		<span class="icon margin-right-xxs">
+		<span class="docon docon-bulleted-list-three-items"></span>
+	</span><span><!---->In this article<!----></span>
+	</div> 
+		<ul id="right-rail-in-this-article-list" aria-live="polite" aria-relevant="additions" class="padding-xxs">
+			<!---->
+					<li class="">
+						<a href="https://docs.microsoft.com/en-us/azure/aks/tutorial-kubernetes-prepare-app#before-you-begin"><!---->Before you begin<!----></a>
+					</li>
+				<!---->
+					<li class="">
+						<a href="https://docs.microsoft.com/en-us/azure/aks/tutorial-kubernetes-prepare-app#get-application-code"><!---->Get application code<!----></a>
+					</li>
+				<!---->
+					<li class="">
+						<a href="https://docs.microsoft.com/en-us/azure/aks/tutorial-kubernetes-prepare-app#create-container-images"><!---->Create container images<!----></a>
+					</li>
+				<!---->
+					<li class="">
+						<a href="https://docs.microsoft.com/en-us/azure/aks/tutorial-kubernetes-prepare-app#test-application-locally"><!---->Test application locally<!----></a>
+					</li>
+				<!---->
+					<li class="expandable">
+						<a href="https://docs.microsoft.com/en-us/azure/aks/tutorial-kubernetes-prepare-app#clean-up-resources"><!---->Clean up resources<!----></a>
+					</li>
+				<!---->
+					<li class="expandable">
+						<a href="https://docs.microsoft.com/en-us/azure/aks/tutorial-kubernetes-prepare-app#next-steps"><!---->Next steps<!----></a>
+					</li>
+				<!---->
+		</ul>
+	 <div class="border-top"><!---->
+		<button aria-expanded="false" data-show-more="" class="button button-clear button-block has-inner-focus" aria-controls="right-rail-in-this-article-list" data-bi-name="show-more-btn">
+			<span class="show-more-text"><!---->Show more<!----></span>
+			<span class="icon" aria-hidden="true">
+				<span class="expanded-indicator docon docon-chevron-down-light"></span>
+			</span>
+		</button>
+	<!----></div>
+		</article>
+	<!----></nav>
+								<section id="right-rail-learning-resources" class="margin-top-xxs" data-bi-name="learning-resources-card" hidden=""></section>
+								<section id="right-rail-qna" class="margin-top-xxs" data-bi-name="qna-link-card" hidden=""></section>
+							</div>
+						</div>
+
+				</div>
+				<!--end of div.columns -->
+
+			</section>
+			<!--end of .primary-holder -->
+
+			<!-- interactive container -->
+			<aside id="interactive-container" class="interactive-container is-visible-interactive column has-body-background-dark ">
+			</aside>
+			<!-- end of interactive container -->
+		</div>
+
+	</div>
+	<!--end of .mainContainer -->
+
+	<section class="border-top has-default-focus is-hidden-interactive margin-top-sm ">
+
+
+
+	<footer id="footer" data-bi-name="footer" class="footer-layout uhf-container has-padding" role="contentinfo">
+	<div class="display-flex is-full-height padding-right-lg-desktop">
+			<a data-mscc-ic="false" class="locale-selector-link button button-clear flex-shrink-0" href="https://docs.microsoft.com/en-us/locale?target=https://docs.microsoft.com/en-us/azure/aks/tutorial-kubernetes-prepare-app" data-bi-name="select-locale">
+					<span class="icon" aria-hidden="true">
+						<span class="docon docon-world"></span>
+					</span>
+					<span class="local-selector-link-text">English (United States)</span></a>
+		<div class="margin-inline-xs flex-shrink-0">
+<div class="dropdown has-caret-up">
+	<button class="dropdown-trigger button button-clear button-sm has-inner-focus theme-dropdown-trigger" aria-controls="theme-menu" aria-expanded="false" title="Theme" data-bi-name="theme">
+		<span class="icon">
+			<span class="docon docon-sun" aria-hidden="true"></span>
+		</span>
+		<span>Theme</span>
+	</button>
+	<div class="dropdown-menu" id="theme-menu" role="menu">
+		<ul class="theme-selector padding-xxs">
+			<li class="theme display-block">
+				<button class="button button-clear button-sm theme-control button-block justify-content-flex-start is-selected" data-theme-to="light" aria-pressed="true">
+					<span class="theme-light margin-right-xxs">
+						<span class="theme-selector-icon css-variable-support border display-inline-block has-body-background" aria-hidden="true">
+							<svg class="svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 14">
+								<rect width="22" height="14" class="has-fill-body-background"></rect>
+								<rect x="5" y="5" width="12" height="4" class="has-fill-secondary"></rect>
+								<rect x="5" y="2" width="2" height="1" class="has-fill-secondary"></rect>
+								<rect x="8" y="2" width="2" height="1" class="has-fill-secondary"></rect>
+								<rect x="11" y="2" width="3" height="1" class="has-fill-secondary"></rect>
+								<rect x="1" y="1" width="2" height="2" class="has-fill-secondary"></rect>
+								<rect x="5" y="10" width="7" height="2" rx="0.3" class="has-fill-primary"></rect>
+								<rect x="19" y="1" width="2" height="2" rx="1" class="has-fill-secondary"></rect>
+							</svg>
+						</span>
+					</span>
+					<span role="menuitem">
+Light					</span>
+				</button>
+			</li>
+			<li class="theme display-block">
+				<button class="button button-clear button-sm theme-control button-block justify-content-flex-start" data-theme-to="dark" aria-pressed="false">
+					<span class="theme-dark margin-right-xxs">
+						<span class="border theme-selector-icon css-variable-support display-inline-block has-body-background" aria-hidden="true">
+							<svg class="svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 14">
+								<rect width="22" height="14" class="has-fill-body-background"></rect>
+								<rect x="5" y="5" width="12" height="4" class="has-fill-secondary"></rect>
+								<rect x="5" y="2" width="2" height="1" class="has-fill-secondary"></rect>
+								<rect x="8" y="2" width="2" height="1" class="has-fill-secondary"></rect>
+								<rect x="11" y="2" width="3" height="1" class="has-fill-secondary"></rect>
+								<rect x="1" y="1" width="2" height="2" class="has-fill-secondary"></rect>
+								<rect x="5" y="10" width="7" height="2" rx="0.3" class="has-fill-primary"></rect>
+								<rect x="19" y="1" width="2" height="2" rx="1" class="has-fill-secondary"></rect>
+							</svg>
+						</span>
+					</span>
+					<span role="menuitem">
+Dark					</span>
+				</button>
+			</li>
+			<li class="theme display-block">
+				<button class="button button-clear button-sm theme-control button-block justify-content-flex-start" data-theme-to="high-contrast" aria-pressed="false">
+					<span class="theme-high-contrast margin-right-xxs">
+						<span class="border theme-selector-icon css-variable-support display-inline-block has-body-background" aria-hidden="true">
+							<svg class="svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 14">
+								<rect width="22" height="14" class="has-fill-body-background"></rect>
+								<rect x="5" y="5" width="12" height="4" class="has-fill-secondary"></rect>
+								<rect x="5" y="2" width="2" height="1" class="has-fill-secondary"></rect>
+								<rect x="8" y="2" width="2" height="1" class="has-fill-secondary"></rect>
+								<rect x="11" y="2" width="3" height="1" class="has-fill-secondary"></rect>
+								<rect x="1" y="1" width="2" height="2" class="has-fill-secondary"></rect>
+								<rect x="5" y="10" width="7" height="2" rx="0.3" class="has-fill-primary"></rect>
+								<rect x="19" y="1" width="2" height="2" rx="1" class="has-fill-secondary"></rect>
+							</svg>
+						</span>
+					</span>
+					<span role="menuitem">
+High contrast					</span>
+				</button>
+			</li>
+		</ul>
+	</div>
+</div>
+		</div>
+	</div>
+	<ul class="links" data-bi-name="footerlinks">
+		<li class="manage-cookies-holder" hidden=""></li>
+				<li><a data-mscc-ic="false" href="https://docs.microsoft.com/en-us/previous-versions/" data-bi-name="archivelink">Previous Version Docs</a></li>
+				<li><a data-mscc-ic="false" href="https://docs.microsoft.com/en-us/teamblog" data-bi-name="bloglink">Blog</a></li>
+				<li><a data-mscc-ic="false" href="https://docs.microsoft.com/en-us/contribute" data-bi-name="contributorGuide">Contribute</a></li>
+					<li><a data-mscc-ic="false" href="https://go.microsoft.com/fwlink/?LinkId=521839" data-bi-name="privacy">Privacy &amp; Cookies</a></li>
+				<li><a data-mscc-ic="false" href="https://docs.microsoft.com/en-us/legal/termsofuse" data-bi-name="termsofuse">Terms of Use</a></li>
+				<li><a data-mscc-ic="false" href="https://www.microsoft.com/en-us/legal/intellectualproperty/Trademarks/EN-US.aspx" data-bi-name="trademarks">Trademarks</a></li>
+		<li>© Microsoft 2022</li>
+	</ul>
+</footer>
+	</section>
+
+	<div id="action-panel" role="region" aria-label="Action Panel" class="action-panel has-default-focus" tabindex="-1"></div>
+
+
+</body></html>
