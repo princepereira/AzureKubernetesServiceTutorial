@@ -41,7 +41,9 @@ PS> az login
 ```
 
 #### Get the subscription ID
+```
 PS> az account show --query "id"
+```
 
 #### Set subscription
 ```
