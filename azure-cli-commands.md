@@ -310,3 +310,40 @@ PS> az vmss extension show --name VMAccessForLinux --resource-group MC_myResourc
 PS> az vmss update-instances --instance-ids ‘*’ --resource-group $CLUSTER_RESOURCE_GROUP --name $SCALE_SET_NAME
 Eg: az vmss update-instances --instance-ids ‘*’ --resource-group MC_myResourceGroup_myAKSCluster_eastus --name aks-nodepool1-20559094-vmss
 ```
+
+#### Start a minimal container to act as a jump station (This will enter the terminal of container)
+```
+PS> kubectl run -it --rm aks-ssh --image=debian
+```
+
+#### Install openssh client inside the container
+```
+Docker> apt-get update && apt-get install openssh-client -y
+```
+
+#### Copy the ssh keys from a new terminal
+```
+PS> cd ~/.ssh
+PS> kubectl cp .\id_rsa aks-ssh:id_rsa
+```
+
+#### Check the key is copied to container
+```
+Docker> ls
+```
+
+#### Provide the execute access to the keys
+```
+Docker> chmod 0600 id_rsa
+```
+
+#### Get the node ip
+```
+PS> kubectl get nodes -o wide
+```
+
+#### SSH from the container to the AKS Node/VM
+```
+Docker> ssh -i id_rsa azureuser@10.224.0.4
+```
+
