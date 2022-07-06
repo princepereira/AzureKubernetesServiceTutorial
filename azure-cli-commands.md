@@ -313,7 +313,7 @@ Eg: az vmss update-instances --instance-ids ‘*’ --resource-group MC_myResour
 
 #### Start a minimal container to act as a jump station (This will enter the terminal of container)
 ```
-PS> kubectl run -it --rm aks-ssh --image=debian
+PS> kubectl run -it aks-ssh --image=debian
 ```
 
 #### Install openssh client inside the container
