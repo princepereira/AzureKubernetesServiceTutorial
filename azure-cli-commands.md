@@ -290,7 +290,7 @@ PS> az aks show --resource-group myResourceGroup --name myAKSCluster --query nod
 #### Find the scale set name
 ```
 PS> az vmss list --resource-group <cluster resource group> --query [0].name -o tsv
-Eg: PS> az vmss list --resource-group MC_myResourceGroup_myAKSCluster_eastus --query [0].name -o tsv
+Eg: az vmss list --resource-group MC_myResourceGroup_myAKSCluster_eastus --query [0].name -o tsv
 ```
 
 #### Copy the SSH keys from local to the node
