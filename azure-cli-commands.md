@@ -269,9 +269,44 @@ PS> kubectl get events
 PS> az aks show --resource-group myResourceGroup --name myAKSCluster --output table
 ```
 
+#### Delete the cluster
+```
+PS> az aks delete --resource-group myResourceGroup --name myAKSCluster
+```
+
 #### Cleanup everything (Delete the resource group)
 ```
 PS> az group delete --name myResourceGroup --yes --no-wait
 ```
 
+# 8. SSH access to VM/AKS Node
 
+#### Find the cluster resource group 
+
+```
+PS> az aks show --resource-group myResourceGroup --name myAKSCluster --query "nodeResourceGroup"
+```
+
+#### Find the scale set name
+```
+PS> az vmss list --resource-group <cluster resource group> --query [0].name -o tsv
+Eg: PS> az vmss list --resource-group MC_myResourceGroup_myAKSCluster_eastus --query [0].name -o tsv
+```
+
+#### Copy the SSH keys from local to the node
+```
+PS> az vmss extension set --resource-group <cluster resource group> --vmss-name <scale set name> --name VMAccessForLinux --publisher Microsoft.OSExtensions --version 1.4 --protected-settings '{"username":"azureuser","ssh_key":"$(cat ~/.ssh/id_rsa)"}'
+
+Eg: az vmss extension set --resource-group MC_myResourceGroup_myAKSCluster_eastus --vmss-name aks-nodepool1-20559094-vmss --name VMAccessForLinux --publisher Microsoft.OSTCExtensions --version 1.4 --protected-settings "{'username':'azureuser', 'ssh_key':'$(cat ~/.ssh/id_rsa.pub)'}"
+```
+
+#### Show extensions
+```
+PS> az vmss extension show --name VMAccessForLinux --resource-group MC_myResourceGroup_myAKSCluster_eastus --vmss-name aks-nodepool1-20559094-vmss
+```
+
+#### Update instances
+```
+PS> az vmss update-instances --instance-ids ‘*’ --resource-group $CLUSTER_RESOURCE_GROUP --name $SCALE_SET_NAME
+Eg: az vmss update-instances --instance-ids ‘*’ --resource-group MC_myResourceGroup_myAKSCluster_eastus --name aks-nodepool1-20559094-vmss
+```
