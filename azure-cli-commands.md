@@ -8,7 +8,7 @@
 # 1. Build Image
 
 
-#### Clone the code
+#### Clone the application code
 ```
 PS> git clone https://github.com/Azure-Samples/azure-voting-app-redis.git
 ```
