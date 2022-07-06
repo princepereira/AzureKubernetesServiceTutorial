@@ -284,7 +284,7 @@ PS> az group delete --name myResourceGroup --yes --no-wait
 #### Find the cluster resource group 
 
 ```
-PS> az aks show --resource-group myResourceGroup --name myAKSCluster --query "nodeResourceGroup"
+PS> az aks show --resource-group myResourceGroup --name myAKSCluster --query nodeResourceGroup -o tsv
 ```
 
 #### Find the scale set name
