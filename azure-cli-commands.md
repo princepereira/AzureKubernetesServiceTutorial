@@ -2,7 +2,8 @@
 - Docker service installed
 - azure cli installed
 - git installed
-- VisualStudio Code
+- VisualStudio Code installed
+- Valid azure account and subscription
 
 
 # 1. Build Image
