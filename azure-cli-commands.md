@@ -33,6 +33,12 @@ Browser> http://localhost:8080
 PS> docker-compose down
 ```
 
+#### Pull a new container
+```
+If you don't want to build image, you can also pull the image.
+PS> mcr.microsoft.com/azuredocs/azure-vote-front:v1
+```
+
 # 2. Push images to azure container registry
 
 
@@ -79,11 +85,6 @@ PS> az acr login --name ppercontainerregistry
 #### Get the login server details of container registry
 ```
 PS> az acr list --resource-group myResourceGroup --query "[].{acrLoginServer:loginServer}" --output table
-```
-
-#### Pull a new container
-```
-PS> mcr.microsoft.com/azuredocs/azure-vote-front:v1
 ```
 
 #### Tag your container with login server details of container registry from previous command
