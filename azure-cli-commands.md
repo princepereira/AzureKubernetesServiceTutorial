@@ -57,7 +57,7 @@ PS> az account show --query "id"
 #### Set subscription
 ```
 PS> az account set --subscription <Subscription ID>
-Eg: az account set --subscription 49d938e4-f3e9-446d-b58f-7ee95eb1c134
+Eg: az account set --subscription 49d938e4-f3e9-446d-b58f-7aa95eb1c123
 ```
 
 #### Create Resource Group
@@ -79,6 +79,11 @@ PS> az acr login --name ppercontainerregistry
 #### Get the login server details of container registry
 ```
 PS> az acr list --resource-group myResourceGroup --query "[].{acrLoginServer:loginServer}" --output table
+```
+
+#### Pull a new container
+```
+PS> mcr.microsoft.com/azuredocs/azure-vote-front:v1
 ```
 
 #### Tag your container with login server details of container registry from previous command
