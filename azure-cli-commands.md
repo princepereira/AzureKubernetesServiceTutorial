@@ -41,6 +41,14 @@ PS> docker-compose down
 PS> az login
 ```
 
+```
+If the above command is not working, use the below command
+PS> az login --use-device-code
+
+A device code will be generated. Use the device code and submit it in the following link in browser.
+Browser> https://microsoft.com/devicelogin
+```
+
 #### Get the subscription ID
 ```
 PS> az account show --query "id"
