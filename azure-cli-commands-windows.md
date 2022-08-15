@@ -121,6 +121,7 @@ Eg: az acr repository show-tags --name ppercontainerregistry.azurecr.io --reposi
 
 #### Create an AKS cluster (Windows)
 ```
+Probably this command take 10-30 minutes.
 PS> az aks create --resource-group myResourceGroup --name myAKSCluster --node-count 2 --enable-addons monitoring --generate-ssh-keys --windows-admin-username <Windows Username> --vm-set-type VirtualMachineScaleSets --network-plugin azure
 Eg: az aks create --resource-group myResourceGroup --name myAKSCluster --node-count 2 --enable-addons monitoring --generate-ssh-keys --windows-admin-username azureuser --vm-set-type VirtualMachineScaleSets --network-plugin azure
 Enter the password when prompts: Admin@123
