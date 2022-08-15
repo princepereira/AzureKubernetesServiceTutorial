@@ -55,6 +55,11 @@ A device code will be generated. Use the device code and submit it in the follow
 Browser> https://microsoft.com/devicelogin
 ```
 
+```
+If you face issues with multi factor authentication, use following command to login:
+PS> az login --tenant <Tenant ID>
+```
+
 #### Get the subscription ID
 ```
 PS> az account show --query "id"
@@ -115,7 +120,7 @@ Eg: az acr repository show-tags --name ppercontainerregistry.azurecr.io --reposi
 # 3. Create Kubernetes Cluster
 
 
-#### Create an AKS cluster
+#### Create an AKS cluster (Linux)
 ```
 PS> az aks create --resource-group myResourceGroup --name myAKSCluster --node-count 2 --generate-ssh-keys --attach-acr <acrName>
 Eg: az aks create --resource-group myResourceGroup --name myAKSCluster --node-count 2 --generate-ssh-keys --attach-acr ppercontainerregistry
