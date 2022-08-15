@@ -126,9 +126,43 @@ Eg: az aks create --resource-group myResourceGroup --name myAKSCluster --node-co
 Enter the password when prompts: Admin@123
 
 If you don't specify username, then username will be "azureuser" by default and password will be some random value.
+```
 
-Adding addtional nodes:
+#### Adding addtional nodes:
+```
 PS> az aks nodepool add --resource-group myResourceGroup --cluster-name myAKSCluster --os-type Windows --name npwin --node-count 1
+```
+
+#### Install the aks-preview extension
+```
+Install the aks-preview extension
+
+PS> az extension add --name aks-preview
+```
+
+```
+Update the extension to make sure you have the latest version installed
+
+PS> az extension update --name aks-preview
+```
+
+##### Register the AKSWindows2022Preview preview feature
+```
+Following commands take few minutes
+
+PS> az feature register --namespace "Microsoft.ContainerService" --name "AKSWindows2022Preview"
+```
+
+```
+See the update of previous command
+
+PS> az feature list -o table --query "[?contains(name, 'Microsoft.ContainerService/AKSWindows2022Preview')].{Name:name,State:properties.state}"
+```
+
+```
+When ready, refresh the registration of the Microsoft.ContainerService resource provider by using the az provider register command:
+
+PS> az provider register --namespace Microsoft.ContainerService
 ```
 
 #### Install Kubernetes cli
