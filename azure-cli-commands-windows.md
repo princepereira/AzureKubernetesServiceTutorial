@@ -297,8 +297,15 @@ PS> ssh -o 'ProxyCommand ssh -p 2022 -W %h:%p azureuser@127.0.0.1' azureuser@10.
 ```
 
 ```
-Enable the current command prompt to be admin. After the following command, you can run commands with admin privilleges"
-PS> net user Administrator /active:yes
+Check all services running
+CMD> sc queryex type=service state=all
+
+Check services by anme
+CMD> sc queryex type=service state=all | find /i "SERVICE_NAME:"
+
+Get the status of specific service
+CMD> sc query <Service Name>
+Eg: CMD> sc query Kubeproxy
 ```
 
 ```
