@@ -265,7 +265,8 @@ PS> az group delete --name myResourceGroup --yes --no-wait
 ```
 use kubectl debug to run a privileged container on your node. The following command starts a privilleged container and enter a shell.
 
-PS> kubectl debug node/aks-nodepool1-18811942-vmss000000 -it --image=mcr.microsoft.com/dotnet/runtime-deps:6.0
+PS> kubectl debug node/<Node ID> -it --image=mcr.microsoft.com/dotnet/runtime-deps:6.0
+Eg: PS> kubectl debug node/aks-nodepool1-18811942-vmss000000 -it --image=mcr.microsoft.com/dotnet/runtime-deps:6.0
 ```
 
 #### Enable port-forward for SSH in newly created debug pod
@@ -277,7 +278,8 @@ PS> kubectl get pods
 
 Using kubectl port-forward, you can open a connection to the deployed pod
 
-PS> kubectl port-forward node-debugger-aks-nodepool1-18811942-vmss000000-g8bbc 2022:22
+PS> kubectl port-forward<Debug Pod ID> 2022:22
+Eg: PS> kubectl port-forward node-debugger-aks-nodepool1-18811942-vmss000000-g8bbc 2022:22
 ```
 
 #### SSH to the node
@@ -297,5 +299,6 @@ PS> ssh -o 'ProxyCommand ssh -p 2022 -W %h:%p azureuser@127.0.0.1' azureuser@10.
 ```
 Once the need for SSH access is done, delete the debug pod
 
-PS> kubectl delete pod node-debugger-aks-nodepool1-12345678-vmss000000-bkmmx
+PS> kubectl delete pod <Debug Pod ID>
+Eg: PS> kubectl delete pod node-debugger-aks-nodepool1-12345678-vmss000000-bkmmx
 ```
