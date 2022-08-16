@@ -43,7 +43,7 @@ Eg: az account set --subscription 49d938e4-f3e9-446d-b58f-7aa95eb1c123
 PS> az group create --name myResourceGroup --location eastus
 ```
 
-# 3. Create Kubernetes Cluster
+# 2. Create Kubernetes Cluster
 
 #### Create an AKS cluster (Windows)
 ```
@@ -115,7 +115,7 @@ PS> kubectl get nodes
 PS> kubectl get nodes -o wide
 ```
 
-# 4. Deploy application in Kubernetes
+# 3. Deploy application in Kubernetes
 
 
 #### Create a deployment and service
@@ -193,7 +193,7 @@ Use the external IP to access the service in browser
 Browser: 20.84.35.16
 ```
 
-# 5. Scale the application
+# 4. Scale the application
 
 
 #### Check the count of running pods now (1 Pod running)
@@ -224,7 +224,7 @@ PS> kubectl get hpa
 PS> az aks scale --resource-group myResourceGroup --name myAKSCluster --node-count 3
 ```
 
-# 6. Upgrade Kubernetes Cluster
+# 5. Upgrade Kubernetes Cluster
 
 #### Get upgrade details
 ```
@@ -255,19 +255,5 @@ PS> az aks delete --resource-group myResourceGroup --name myAKSCluster
 #### Cleanup everything (Delete the resource group)
 ```
 PS> az group delete --name myResourceGroup --yes --no-wait
-```
-
-# 7. SSH access to VM/AKS Node
-
-#### Find the cluster resource group 
-
-```
-PS> az aks show --resource-group myResourceGroup --name myAKSCluster --query nodeResourceGroup -o tsv
-```
-
-#### Find the scale set name
-```
-PS> az vmss list --resource-group <cluster resource group> --query [0].name -o tsv
-Eg: az vmss list --resource-group MC_myResourceGroup_myAKSCluster_eastus --query [0].name -o tsv
 ```
 
