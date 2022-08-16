@@ -257,3 +257,45 @@ PS> az aks delete --resource-group myResourceGroup --name myAKSCluster
 PS> az group delete --name myResourceGroup --yes --no-wait
 ```
 
+
+# 6. Enable SSH Connection to the Node
+
+#### Create an interactive shell connection to a Linux node
+
+```
+use kubectl debug to run a privileged container on your node. The following command starts a privilleged container and enter a shell.
+
+PS> kubectl debug node/aks-nodepool1-18811942-vmss000000 -it --image=mcr.microsoft.com/dotnet/runtime-deps:6.0
+```
+
+#### Enable port-forward for SSH in newly created debug pod
+
+```
+Open a new terminal window and use kubectl get pods to get the name of the pod started by kubectl debug.
+
+PS> kubectl get pods
+
+Using kubectl port-forward, you can open a connection to the deployed pod
+
+PS> kubectl port-forward node-debugger-aks-nodepool1-18811942-vmss000000-g8bbc 2022:22
+```
+
+#### SSH to the node
+
+```
+Open a new terminal and use kubectl get nodes to show the internal IP address of the Windows Server node:
+
+PS> kubectl get nodes -o wide
+
+
+Create an SSH connection to the Windows Server node using the internal IP address. The default username for AKS nodes is azureuser. Accept the prompt to continue with the connection. You are then provided with the bash prompt of your Windows Server node:
+
+PS> ssh -o 'ProxyCommand ssh -p 2022 -W %h:%p azureuser@127.0.0.1' azureuser@<Node Internal IP>
+PS> ssh -o 'ProxyCommand ssh -p 2022 -W %h:%p azureuser@127.0.0.1' azureuser@10.224.0.66
+```
+
+```
+Once the need for SSH access is done, delete the debug pod
+
+PS> kubectl delete pod node-debugger-aks-nodepool1-12345678-vmss000000-bkmmx
+```
