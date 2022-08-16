@@ -297,6 +297,11 @@ PS> ssh -o 'ProxyCommand ssh -p 2022 -W %h:%p azureuser@127.0.0.1' azureuser@10.
 ```
 
 ```
+Enable the current command prompt to be admin. After the following command, you can run commands with admin privilleges"
+PS> net user Administrator /active:yes
+```
+
+```
 Once the need for SSH access is done, delete the debug pod
 
 PS> kubectl delete pod <Debug Pod ID>
