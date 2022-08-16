@@ -6,40 +6,7 @@
 - Valid azure account and subscription
 
 
-# 1. Build Image
-
-
-#### Clone the application code
-```
-PS> git clone https://github.com/Azure-Samples/azure-voting-app-redis.git
-```
-
-
-#### Build the docker image and run the services locally using docker-compose (Run in linux container mode)
-```
-PS> cd azure-voting-app-redis
-PS> docker-compose up -d
-PS> docker images
-PS> docker ps
-```
-
-#### Test application locally
-```
-Browser> http://localhost:8080
-```
-
-#### Cleanup the resources
-```
-PS> docker-compose down
-```
-
-#### Pull a new container
-```
-If you don't want to build image, you can also pull the image.
-PS> mcr.microsoft.com/azuredocs/azure-vote-front:v1
-```
-
-# 2. Push images to azure container registry
+# 1. Azure Login
 
 
 #### Login to azure (Username, Password will be prompted)
@@ -76,47 +43,6 @@ Eg: az account set --subscription 49d938e4-f3e9-446d-b58f-7aa95eb1c123
 PS> az group create --name myResourceGroup --location eastus
 ```
 
-#### Create container registry
-```
-PS> az acr create --resource-group myResourceGroup --name <registry name> --sku Basic
-Eg: az acr create --resource-group myResourceGroup --name ppercontainerregistry --sku Basic
-```
-
-#### To execute commands, login to container registry
-```
-PS> az acr login --name ppercontainerregistry
-```
-
-#### Get the login server details of container registry
-```
-PS> az acr list --resource-group myResourceGroup --query "[].{acrLoginServer:loginServer}" --output table
-```
-
-#### Tag your container with login server details of container registry from previous command
-```
-PS> docker tag mcr.microsoft.com/azuredocs/azure-vote-front:v1 <acrLoginServer>/azure-vote-front:v1
-Eg: docker tag mcr.microsoft.com/azuredocs/azure-vote-front:v1 ppercontainerregistry.azurecr.io/azure-vote-front:v1
-```
-
-#### Push images to the registry
-```
-PS> docker push <acrLoginServer>/azure-vote-front:v1
-Eg: docker push ppercontainerregistry.azurecr.io/azure-vote-front:v1
-```
-
-#### List images in the registry
-```
-PS> az acr repository list --name <acrName> --output table
-Eg: az acr repository list --name ppercontainerregistry.azurecr.io --output table
-```
-
-#### To see the tags for specified image
-```
-PS> az acr repository show-tags --name <acrName> --repository azure-vote-front --output table
-Eg: az acr repository show-tags --name ppercontainerregistry.azurecr.io --repository azure-vote-front --output table
-```
-
-
 # 3. Create Kubernetes Cluster
 
 #### Create an AKS cluster (Windows)
@@ -129,7 +55,13 @@ Enter the password when prompts: Admin@123
 If you don't specify username, then username will be "azureuser" by default and password will be some random value.
 ```
 
-#### Adding addtional nodes:
+```
+If the above commands didn't work, please use the following command to create Windows AKS Cluster.
+
+PS> az aks create --resource-group myResourceGroup --name myAKSCluster --node-count 1 --generate-ssh-keys --vm-set-type VirtualMachineScaleSets --network-plugin azure
+```
+
+#### Adding addtional nodes / Adding worker nodes:
 ```
 PS> az aks nodepool add --resource-group myResourceGroup --cluster-name myAKSCluster --os-type Windows --name npwin --node-count 1
 ```
@@ -179,41 +111,86 @@ PS> az aks get-credentials --resource-group myResourceGroup --name myAKSCluster
 #### Verify connection to the cluster
 ```
 PS> kubectl get nodes
-```
 
+PS> kubectl get nodes -o wide
+```
 
 # 4. Deploy application in Kubernetes
 
 
-#### Get the azure container registry login server details
+#### Create a deployment and service
+
 ```
-PS> az acr list --resource-group myResourceGroup --query "[].{acrLoginServer:loginServer}" --output table
+File: sample.yaml
+```
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sample
+  labels:
+    app: sample
+spec:
+  replicas: 1
+  template:
+    metadata:
+      name: sample
+      labels:
+        app: sample
+    spec:
+      nodeSelector:
+        "kubernetes.io/os": windows
+      containers:
+      - name: sample
+        image: mcr.microsoft.com/dotnet/framework/samples:aspnetapp
+        resources:
+          limits:
+            cpu: 1
+            memory: 800M
+        ports:
+          - containerPort: 80
+  selector:
+    matchLabels:
+      app: sample
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sample
+spec:
+  type: LoadBalancer
+  ports:
+  - protocol: TCP
+    port: 80
+  selector:
+    app: sample
 ```
 
-#### open the manifestfile in the cloned repo from github in first section
 ```
-PS> code azure-vote-all-in-one-redis.yaml
-```
-
-#### Replace line:60 as following (To point image to our container registry)
-```
->> From > image: mcr.microsoft.com/azuredocs/azure-vote-front:v1
->> To   > ppercontainerregistry.azurecr.io/azure-vote-front:v1
+PS> kubectl apply -f sample.yaml
 ```
 
-#### Deploy the application
 ```
-PS> kubectl apply -f azure-vote-all-in-one-redis.yaml
+Check the pods are ready
+
+PS> kubectl get pods --watch
 ```
 
-#### Wait for service to be up (Till External IP is available)
 ```
-PS> kubectl get service azure-vote-front --watch
+Once the pods are ready, get the Loadbalacer IP
+
+PS> kubectl get service sample
 ```
 
-#### Use the external IP to load the application in browser
 ```
-Browser> 20.81.69.199
+NAME     TYPE           CLUSTER-IP     EXTERNAL-IP   PORT(S)        AGE
+sample   LoadBalancer   10.0.112.204   20.84.35.16   80:30090/TCP   5h27m
+```
+
+```
+Use the external IP to access the service in browser
+
+Browser: 20.84.35.16
 ```
 
 # 5. Scale the application
@@ -226,7 +203,7 @@ PS> kubectl get pods
 
 #### Manually scale the pod replicas (To check, run the prev command again)
 ```
-PS> kubectl scale --replicas=5 deployment/azure-vote-front
+PS> kubectl scale --replicas=5 deployment/sample
 ```
 
 #### See the version of AKS cluster
@@ -234,7 +211,7 @@ PS> az aks show --resource-group myResourceGroup --name myAKSCluster --query kub
 
 #### Autoscale pods (Scale out if cpu percent > 50%)
 ```
-PS> kubectl autoscale deployment azure-vote-front --cpu-percent=50 --min=3 --max=10
+PS> kubectl autoscale deployment sample --cpu-percent=50 --min=3 --max=10
 ```
 
 #### Get the status of autoscaler
@@ -247,66 +224,7 @@ PS> kubectl get hpa
 PS> az aks scale --resource-group myResourceGroup --name myAKSCluster --node-count 3
 ```
 
-
-# 6. Update the application
-
-
-#### Update the application with following changes in cloned repo
-```
-PS> code azure-vote/azure-vote/config_file.cfg
-```
-
-From:
-```
-TITLE = 'Azure Voting App'
-VOTE1VALUE = 'Cats'
-VOTE2VALUE = 'Dogs'
-SHOWHOST = 'false'
-```
-
-To:
-```
-# UI Configurations
-TITLE = 'Azure Voting App'
-VOTE1VALUE = 'Blue'
-VOTE2VALUE = 'Purple'
-SHOWHOST = 'false'
-```
-
-#### Update the container image
-```
-PS> docker-compose up --build -d
-PS> docker ps
-Browser> http://localhost:8080
-```
-
-#### Tag the image and push
-```
-PS> az acr list --resource-group myResourceGroup --query "[].{acrLoginServer:loginServer}" --output table
-
-
-PS> docker tag mcr.microsoft.com/azuredocs/azure-vote-front:v1 <acrLoginServer>/azure-vote-front:v2
-Eg: docker tag mcr.microsoft.com/azuredocs/azure-vote-front:v1 ppercontainerregistry.azurecr.io/azure-vote-front:v2
-
-PS> docker push <acrLoginServer>/azure-vote-front:v2
-Eg: docker push ppercontainerregistry.azurecr.io/azure-vote-front:v2
-```
-
-#### Update the pod with latest image
-```
-PS> kubectl set image deployment azure-vote-front azure-vote-front=<acrLoginServer>/azure-vote-front:v2
-Eg: kubectl set image deployment azure-vote-front azure-vote-front=ppercontainerregistry.azurecr.io/azure-vote-front:v2
-
-PS> kubectl get pods
-```
-
-#### Get the loadbalancer ip 
-```
-PS> kubectl get service azure-vote-front
-Browser> 20.81.69.199
-```
-
-# 7. Upgrade Kubernetes Cluster
+# 6. Upgrade Kubernetes Cluster
 
 #### Get upgrade details
 ```
@@ -339,7 +257,7 @@ PS> az aks delete --resource-group myResourceGroup --name myAKSCluster
 PS> az group delete --name myResourceGroup --yes --no-wait
 ```
 
-# 8. SSH access to VM/AKS Node
+# 7. SSH access to VM/AKS Node
 
 #### Find the cluster resource group 
 
@@ -353,41 +271,3 @@ PS> az vmss list --resource-group <cluster resource group> --query [0].name -o t
 Eg: az vmss list --resource-group MC_myResourceGroup_myAKSCluster_eastus --query [0].name -o tsv
 ```
 
-#### Copy the SSH keys from local to the node
-```
-PS> az vmss extension set --resource-group <cluster resource group> --vmss-name <scale set name> --name VMAccessForLinux --publisher Microsoft.OSExtensions --version 1.4 --protected-settings '{"username":"azureuser","ssh_key":"$(cat ~/.ssh/id_rsa)"}'
-
-Eg: az vmss extension set --resource-group MC_myResourceGroup_myAKSCluster_eastus --vmss-name aks-nodepool1-20559094-vmss --name VMAccessForLinux --publisher Microsoft.OSTCExtensions --version 1.4 --protected-settings "{'username':'azureuser', 'ssh_key':'$(cat ~/.ssh/id_rsa.pub)'}"
-```
-
-#### Show extensions
-```
-PS> az vmss extension show --name VMAccessForLinux --resource-group MC_myResourceGroup_myAKSCluster_eastus --vmss-name aks-nodepool1-20559094-vmss
-```
-
-#### Update instances
-```
-PS> az vmss update-instances --instance-ids ‘*’ --resource-group $CLUSTER_RESOURCE_GROUP --name $SCALE_SET_NAME
-Eg: az vmss update-instances --instance-ids ‘*’ --resource-group MC_myResourceGroup_myAKSCluster_eastus --name aks-nodepool1-20559094-vmss
-```
-
-#### Start a minimal container to act as a jump station (This will enter the terminal of container)
-```
-PS> kubectl run -it aks-ssh --image=debian
-```
-
-#### Install openssh client inside the container
-```
-Docker> apt-get update && apt-get install openssh-client -y
-```
-
-#### Copy the ssh keys from a new terminal
-```
-PS> cd ~/.ssh
-PS> kubectl cp .\id_rsa aks-ssh:id_rsa
-```
-
-#### Check the key is copied to container
-```
-Docker> ls
-```
