@@ -297,6 +297,25 @@ PS> ssh -o 'ProxyCommand ssh -p 2022 -W %h:%p azureuser@127.0.0.1' azureuser@10.
 ```
 
 ```
+If you get any errors like below, clear entries in C:\Users\{username}\.ssh\known_hosts
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@    WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!     @
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+IT IS POSSIBLE THAT SOMEONE IS DOING SOMETHING NASTY!
+Someone could be eavesdropping on you right now (man-in-the-middle attack)!
+It is also possible that a host key has just been changed.
+The fingerprint for the ECDSA key sent by the remote host is
+SHA256:y73+VmH/a7cu3tJ82/knJ4/kgbdUFC+PxRUOQ0OxyYQ.
+Please contact your system administrator.
+Add correct host key in C:\\Users\\ppereira/.ssh/known_hosts to get rid of this message.
+Offending ECDSA key in C:\\Users\\ppereira/.ssh/known_hosts:3
+ECDSA host key for [127.0.0.1]:2022 has changed and you have requested strict checking.
+Host key verification failed.
+kex_exchange_identification: Connection closed by remote host
+```
+
+```
 Check all services running
 CMD> sc queryex type=service state=all
 
