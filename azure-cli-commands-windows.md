@@ -32,6 +32,12 @@ PS> az login --tenant <Tenant ID>
 PS> az account show --query "id"
 ```
 
+#### List all subscriptions and grep
+```
+PS> az account list --all --output table | findstr.exe <Subscription Pattern>
+Eg: az account list --all --output table | findstr.exe Core-STACK-CoreNet-DEV
+```
+
 #### Set subscription
 ```
 PS> az account set --subscription <Subscription ID>
