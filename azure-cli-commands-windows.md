@@ -339,3 +339,63 @@ Once the need for SSH access is done, delete the debug pod
 PS> kubectl delete pod <Debug Pod ID>
 Eg: PS> kubectl delete pod node-debugger-aks-nodepool1-12345678-vmss000000-bkmmx
 ```
+
+# 7. Enable RDP Connection to the Windows Node
+#### Query for following information
+```
+The commands below will query for the following information:
+
+Cluster Resource Group (CLUSTER_RG):
+PS> az aks show -g myResourceGroup -n myAKSCluster --query nodeResourceGroup -o tsv
+
+Virtual network (VNET_NAME):
+PS> az network vnet list -g <CLUSTER_RG> --query [0].name -o tsv
+
+Subnet name (SUBNET_NAME):
+PS> az network vnet subnet list -g <CLUSTER_RG> --vnet-name <VNET_NAME> --query [0].name -o tsv
+
+Subnet ID (SUBNET_ID):
+PS> az network vnet subnet show -g <CLUSTER_RG> --vnet-name <VNET_NAME> --name <SUBNET_NAME> --query id -o tsv
+
+```
+
+#### Deploy a virtual machine to the same subnet as your cluster (using above queried values)
+
+```
+Create new VM
+PS> az vm create  --resource-group myResourceGroup --name myVM --image win2019datacenter --admin-username azureuser --admin-password <admin-password>  --subnet <SUBNET_ID> --nic-delete-option delete --os-disk-delete-option delete --nsg "" --public-ip-address <PUBLIC_IP_ADDRESS> --query publicIpAddress -o tsv
+Eg: PS> az vm create --resource-group myResourceGroup --name myRDPVM --image win2019datacenter --admin-username azureuser --admin-password Admin@123 --subnet /subscriptions/3127e2af-c391-46d9-9699-4bdb12c29012/resourceGroups/MC_AKSclustersample_samplecluster_eastus/providers/Microsoft.Network/virtualNetworks/aks-vnet-42101894/subnets/aks-subnet --nic-delete-option delete --os-disk-delete-option delete --public-ip-address "myVMPublicIP" --query publicIpAddress -o tsv
+
+Record the public IP address of the virtual machine displayed after executing above command.
+Query for the Network Security Group name (NSG_NAME):
+PS> az network nsg list -g <CLUSTER_RG> --query [].name -o tsv
+
+Create the NSG rule:
+PS> az network nsg rule create --name tempRDPAccess --resource-group <CLUSTER_RG> --nsg-name <NSG_NAME> --priority 100 --destination-port-range 3389 --protocol Tcp --description "Temporary RDP access to Windows nodes"
+Eg: PS> az network nsg rule create --name myVMRDPAccess --resource-group myResourceGroup --nsg-name aks-agentpool-42101894-nsg --priority 100 --destination-port-range 3389 --protocol Tcp --description "Temporary RDP access to Windows nodes"
+```
+
+#### Login to the new VM
+
+```
+RDP to the VM using the recorded public IP.
+Get the internal IP of the nodes and RDP to the required node IP from within the VM
+
+PS> kubectl get nodes -o wide
+
+```
+
+#### Delete the VM, public IP address and the NSG rule
+
+```
+Delete the VM
+PS> az vm delete --resource-group myResourceGroup --name myRDPVM
+
+Delete the VM public IP address
+PS> az network public-ip delete --resource-group myResourceGroup --name $PUBLIC_IP_ADDRESS
+Eg: PS> az network public-ip delete --resource-group myResourceGroup --name 52.146.39.153
+
+Delete the NSG rule
+PS> az network nsg rule delete --resource-group <CLUSTER_RG> --nsg-name <NSG_NAME> --name tempRDPAccess
+Eg: PS> az network nsg rule delete --resource-group myResourceGroup --nsg-name aks-agentpool-42101894-nsg --name tempRDPAccess
+```
