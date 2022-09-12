@@ -271,7 +271,7 @@ PS> az group delete --name myResourceGroup --yes --no-wait
 ```
 use kubectl debug to run a privileged container on your node. The following command starts a privilleged container and enter a shell.
 
-PS> kubectl debug node/<Node ID> -it --image=mcr.microsoft.com/dotnet/runtime-deps:6.0
+PS> kubectl debug node/<Control Plane Node ID> -it --image=mcr.microsoft.com/dotnet/runtime-deps:6.0
 Eg: PS> kubectl debug node/aks-nodepool1-18811942-vmss000000 -it --image=mcr.microsoft.com/dotnet/runtime-deps:6.0
 ```
 
@@ -284,7 +284,7 @@ PS> kubectl get pods
 
 Using kubectl port-forward, you can open a connection to the deployed pod
 
-PS> kubectl port-forward<Debug Pod ID> 2022:22
+PS> kubectl port-forward <Debug Pod ID> 2022:22
 Eg: PS> kubectl port-forward node-debugger-aks-nodepool1-18811942-vmss000000-g8bbc 2022:22
 ```
 
