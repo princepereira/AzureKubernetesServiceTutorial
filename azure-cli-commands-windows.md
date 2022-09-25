@@ -67,6 +67,14 @@ If the above commands didn't work, please use the following command to create Wi
 PS> az aks create --resource-group myResourceGroup --name myAKSCluster --node-count 1 --generate-ssh-keys --vm-set-type VirtualMachineScaleSets --network-plugin azure
 ```
 
+```
+Creating AKS cluster with Network Policy (Azure NPM)
+az aks create --resource-group pper_npm_rg --name aksClusterAzureNpm --node-count 1 --generate-ssh-keys --vm-set-type VirtualMachineScaleSets --network-plugin azure --network-policy azure
+
+Creating AKS cluster with Network Policy (Calico NPM)
+az aks create --resource-group pper_npm_rg --name aksClusterCalicoNpm --node-count 1 --generate-ssh-keys --vm-set-type VirtualMachineScaleSets --network-plugin azure --network-policy calico
+```
+
 #### Adding addtional nodes / Adding worker nodes:
 ```
 PS> az aks nodepool add --resource-group myResourceGroup --cluster-name myAKSCluster --os-type Windows --name npwin --node-count 1
