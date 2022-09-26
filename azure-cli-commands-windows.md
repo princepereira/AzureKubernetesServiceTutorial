@@ -329,6 +329,12 @@ Host key verification failed.
 kex_exchange_identification: Connection closed by remote host
 ```
 
+To SCP logs directory in azure node:
+
+```
+PS> scp -r -o 'ProxyCommand ssh -p 2022 -W %h:%p azureuser@127.0.0.1' azureuser@<Azure Node IP>:logs/
+Eg: PS> scp -r -o 'ProxyCommand ssh -p 2022 -W %h:%p azureuser@127.0.0.1' azureuser@10.224.0.33:logs/
+```
 ```
 Check all services running
 CMD> sc queryex type=service state=all
@@ -341,6 +347,10 @@ CMD> sc query <Service Name>
 Eg: CMD> sc query Kubeproxy
 ```
 
+If you want to execute powershell commands from CMD:
+```
+CMD> powershell
+```
 ```
 Once the need for SSH access is done, delete the debug pod
 
