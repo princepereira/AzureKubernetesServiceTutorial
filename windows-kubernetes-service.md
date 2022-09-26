@@ -149,7 +149,7 @@ Egress Policy 1 (Based on Port rules)
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: default-deny-all-egress
+  name: npm-port-selector
   namespace: demo
 spec:
   podSelector: {}
@@ -194,7 +194,7 @@ Egress Policy 2 (Based on namespaceSelector)
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: default-deny-all-egress
+  name: npm-namespace-selector
   namespace: demo
 spec:
   podSelector: {}
