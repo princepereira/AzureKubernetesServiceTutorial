@@ -2,6 +2,12 @@
 
 #### 1. Create server deployment
 
+You can run server with pod alone as well as [deployment + service]. If you need only a single server pod, then follow the below command.
+```
+>> kubectl run server -n demo --image=k8s.gcr.io/e2e-test-images/agnhost:2.33 --labels="app=server" --port=80 --command -- /agnhost serve-hostname --tcp --http=false --port "80"
+```
+
+If you need it as [deployment + service], then follow below command.
 ```
 File: server-deployment.yaml
 ```
@@ -98,10 +104,10 @@ spec:
 >> kubectl run -it client -n demo --image=k8s.gcr.io/e2e-test-images/agnhost:2.33 --command -- bash
 ```
 
-The above command will create a container and enter the pod cli. If the above command is timed out, you can reattach using below command.
+The above command will create a container and enter the pod cli. If the above command is timed out, you can reattach to the pod using below command.
 
 ```
->> kubectl run -it client -n demo --image=k8s.gcr.io/e2e-test-images/agnhost:2.33 --command -- bash
+>> kubectl attach client -c client -i -t -n demo
 ```
 
 #### 4. Make a client call to the server running
@@ -133,7 +139,11 @@ spec:
     - port: 80
       protocol: TCP
 ```
+For the above command to work, your client pod should need a label as below.
 
+```
+>> kubectl label pod client -n demo app=client
+```
 Egress Policy 1 (Based on Port rules)
 ```
 apiVersion: networking.k8s.io/v1
