@@ -119,7 +119,7 @@ Get the service ip
 
 #### 5. If you want to use network policies:
 
-Ingress Policy
+#### Ingress Policy
 ```
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -144,7 +144,7 @@ For the above command to work, your client pod should need a label as below.
 ```
 >> kubectl label pod client -n demo app=client
 ```
-Egress Policy 1 (Based on Port rules)
+#### Egress Policy 1 (Based on Port rules)
 ```
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -189,7 +189,7 @@ spec:
   - Egress
 ```
 
-Egress Policy 2 (Based on namespaceSelector)
+#### Egress Policy 2 (Based on namespaceSelector)
 ```
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
