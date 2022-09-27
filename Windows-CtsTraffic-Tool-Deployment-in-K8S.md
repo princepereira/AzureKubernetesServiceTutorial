@@ -93,6 +93,11 @@ spec:
 >> kubectl run -it ctstraffic-client -n demo --image=ueqt/ctstraffic --command -- cmd
 ```
 
+If the above session is ended, resume using below command:
+``
+>> kubectl attach ctstraffic-client -c ctstraffic-client -i -t -n demo
+```
+
 #### 4. Establish cient server connection
 
 Get the service IP
