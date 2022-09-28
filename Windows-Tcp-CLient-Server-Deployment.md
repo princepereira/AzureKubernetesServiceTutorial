@@ -2,7 +2,6 @@
 
 This will enable client server test connection tool which can be run in Windows.
 
-Ref: https://github.com/microsoft/ctsTraffic
 
 #### 1. Create TCP Server Deployment
 
