@@ -109,6 +109,7 @@ Get the service IP
 ```
 >> kubectl get services -n demo
 ```
+
 Connect client to server
 ```
 client >> client 10.0.120.113:4444 100000
