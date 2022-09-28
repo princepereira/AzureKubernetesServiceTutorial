@@ -111,7 +111,7 @@ Get the service IP
 
 Connect client to server
 ```
-client >> client <Service IP>:<Port> 100000
+client >> client -i <Service IP> -p <Internal Port> -c <No: of Connections> -r <Reqs per Conn> -d <Delay in ms for each req per conn>
 
-Eg: client >> client 10.0.120.113:4444 100000
+Eg: client >> client -i 127.0.0.1 -p 4444 -c 10 -r 10 -d 50
 ```
