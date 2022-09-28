@@ -112,5 +112,7 @@ Get the service IP
 
 Connect client to server
 ```
-client >> client 10.0.120.113:4444 100000
+client >> client <Service IP>:<Port> 100000
+
+Eg: client >> client 10.0.120.113:4444 100000
 ```
