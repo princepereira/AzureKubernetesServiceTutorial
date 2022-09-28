@@ -99,8 +99,8 @@ spec:
 ```
 
 If the above session is ended, resume using below command:
-``
->> kubectl attach tcp-client -c ctstraffic-client -i -t -n demo
+```
+>> kubectl attach tcp-client -c tcp-client -i -t -n demo
 ```
 
 #### 4. Establish cient server connection
