@@ -1,4 +1,4 @@
-# Windows Tcp CLient Server Deployment
+# Windows Tcp Client Server Deployment
 
 This will enable client server test connection tool which can be run in Windows.
 
