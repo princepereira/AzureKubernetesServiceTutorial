@@ -10,7 +10,7 @@
 
 
 $count = 100000
-$waitTime = 5
+$waitTime = 2
 $nodeIP = "10.224.0.33"
 $crashDumpPath = "C:\LocalDumps"
 $collectLogsPath = "C:\k\debug"
@@ -28,6 +28,9 @@ for ($num = 1 ; $num -le $count ; $num++) {
     Write-Host "#======  Iteration : $num started ..."
     Start-Sleep $waitTime
     deployment
+    if($num % 5 -ne 0) {
+        continue
+    }
     $dirInfo = ssh -o ConnectTimeout=300 -o 'ProxyCommand ssh -o ConnectTimeout=300 -p 2022 -W %h:%p azureuser@127.0.0.1' azureuser@${nodeIP} 'powershell -Command "Get-ChildItem C:\LocalDumps "'
     Write-Host "#======  Directory Info : $dirInfo"
     $dirCount = ($dirInfo | Measure-Object).Count
@@ -55,3 +58,4 @@ for ($num = 1 ; $num -le $count ; $num++) {
 }
 
 Write-Host "#======  Script completed without any issues ..."
+
