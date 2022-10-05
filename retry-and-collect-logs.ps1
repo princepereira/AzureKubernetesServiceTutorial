@@ -1,5 +1,6 @@
 #===== Things to set in the node powershell ======#
 
+# Enable port forwarding SSH access to the node
 # PS> Add-Content $PROFILE '$ProgressPreference = "SilentlyContinue"'
 # PS> mkdir C:\LocalDumps
 # PS> Reg add "HKLM\Software\Microsoft\Windows\Windows Error Reporting\LocalDumps" /V DumpCount /t REG_DWORD /d 50 /f
