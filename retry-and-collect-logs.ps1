@@ -19,6 +19,9 @@ $collectWindowsLogs = ".\collect-windows-logs.ps1"
 function deployment() {
     Write-Host "#======  Deployment started ..."
     kubectl create -f yamls\
+    Start-Sleep 5
+    kubectl scale --replicas=10 deployment tcp-server
+    Start-Sleep 5
     kubectl delete -f yamls\
     Write-Host "#======  Deployment cleaned up ..."
 }
@@ -58,4 +61,3 @@ for ($num = 1 ; $num -le $count ; $num++) {
 }
 
 Write-Host "#======  Script completed without any issues ..."
-
