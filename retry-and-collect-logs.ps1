@@ -27,7 +27,7 @@ function deployment() {
 function startPktmon() {
     Write-Host "#======  Starting pktmon capture ..."
     ssh -o ConnectTimeout=300 -o 'ProxyCommand ssh -o ConnectTimeout=300 -p 2022 -W %h:%p azureuser@127.0.0.1' azureuser@${nodeIP} 'powershell -Command "rm aks* "'
-    ssh -o ConnectTimeout=300 -o 'ProxyCommand ssh -o ConnectTimeout=300 -p 2022 -W %h:%p azureuser@127.0.0.1' azureuser@${nodeIP} 'powershell -Command "pktmon start --trace -p Microsoft-Windows-Host-Network-Service -l 2 -m multi-file "'
+    ssh -o ConnectTimeout=300 -o 'ProxyCommand ssh -o ConnectTimeout=300 -p 2022 -W %h:%p azureuser@127.0.0.1' azureuser@${nodeIP} 'powershell -Command "pktmon start --trace -p Microsoft-Windows-Host-Network-Service -l 8 -m multi-file "'
 }
 
 function stopPktmon() {
