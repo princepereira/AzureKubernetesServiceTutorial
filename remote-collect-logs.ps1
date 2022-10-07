@@ -7,6 +7,7 @@ $nodeIP = "10.224.0.33"
 $logPath = "AKS-Logs"
 
 
+Remove-Item $logPath -Recurse -Force
 mkdir $logPath
 ssh -o ConnectTimeout=300 -o 'ProxyCommand ssh -o ConnectTimeout=300 -p 2022 -W %h:%p azureuser@127.0.0.1' azureuser@${nodeIP} 'powershell -Command "rm aks* "'
 ssh -o ConnectTimeout=300 -o 'ProxyCommand ssh -o ConnectTimeout=300 -p 2022 -W %h:%p azureuser@127.0.0.1' azureuser@${nodeIP} 'powershell -Command "Remove-Item -r C:\k\debug\* -Exclude *.ps1,*.cmd,*.psm1 "'
@@ -14,4 +15,6 @@ ssh -o ConnectTimeout=300 -o 'ProxyCommand ssh -o ConnectTimeout=300 -p 2022 -W 
 Start-Sleep 5
 Write-Host "#======  Copying collected windows logs ..."
 scp -o 'ProxyCommand ssh -o ConnectTimeout=300 -p 2022 -W %h:%p azureuser@127.0.0.1' azureuser@${nodeIP}:aks* $logPath
-
+scp -o 'ProxyCommand ssh -o ConnectTimeout=300 -p 2022 -W %h:%p azureuser@127.0.0.1' azureuser@${nodeIP}:PktMon* $logPath
+ssh -o ConnectTimeout=300 -o 'ProxyCommand ssh -o ConnectTimeout=300 -p 2022 -W %h:%p azureuser@127.0.0.1' azureuser@${nodeIP} 'powershell -Command "rm PktMon* "'
+PktMon etl2txt $logPath\*.etl
