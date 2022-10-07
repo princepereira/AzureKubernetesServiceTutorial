@@ -69,7 +69,7 @@ for ($num = 1 ; $num -le $count ; $num++) {
         ssh -o ConnectTimeout=300 -o 'ProxyCommand ssh -o ConnectTimeout=300 -p 2022 -W %h:%p azureuser@127.0.0.1' azureuser@${nodeIP} 'powershell -Command "Remove-Item -r C:\k\debug\* -Exclude *.ps1,*.cmd,*.psm1 "'
 	  Write-Host "#======  CrashDump copy completed ..."
         scp -o 'ProxyCommand ssh -o ConnectTimeout=300 -p 2022 -W %h:%p azureuser@127.0.0.1' azureuser@${nodeIP}:PktMon* $logPath
-        PktMon etl2txt $logPath\*.etl
+        PktMon etl2txt $logPath*.etl
         ssh -o ConnectTimeout=300 -o 'ProxyCommand ssh -o ConnectTimeout=300 -p 2022 -W %h:%p azureuser@127.0.0.1' azureuser@${nodeIP} 'powershell -Command "rm PktMon* "'
         return
     }
