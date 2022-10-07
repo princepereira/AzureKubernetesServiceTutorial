@@ -12,9 +12,7 @@
 $count = 100000
 $waitTime = 2
 $nodeIP = "10.224.0.33"
-$crashDumpPath = "C:\LocalDumps"
-$collectLogsPath = "C:\k\debug"
-$collectWindowsLogs = ".\collect-windows-logs.ps1"
+
 
 function deployment() {
     Write-Host "#======  Deployment started ..."
@@ -28,6 +26,7 @@ function deployment() {
 
 function startPktmon() {
     Write-Host "#======  Starting pktmon capture ..."
+    ssh -o ConnectTimeout=300 -o 'ProxyCommand ssh -o ConnectTimeout=300 -p 2022 -W %h:%p azureuser@127.0.0.1' azureuser@${nodeIP} 'powershell -Command "rm aks* "'
     ssh -o ConnectTimeout=300 -o 'ProxyCommand ssh -o ConnectTimeout=300 -p 2022 -W %h:%p azureuser@127.0.0.1' azureuser@${nodeIP} 'powershell -Command "pktmon start --trace -p Microsoft-Windows-Host-Network-Service -l 2 -m multi-file "'
 }
 
@@ -70,6 +69,7 @@ for ($num = 1 ; $num -le $count ; $num++) {
         ssh -o ConnectTimeout=300 -o 'ProxyCommand ssh -o ConnectTimeout=300 -p 2022 -W %h:%p azureuser@127.0.0.1' azureuser@${nodeIP} 'powershell -Command "Remove-Item -r C:\k\debug\* -Exclude *.ps1,*.cmd,*.psm1 "'
 	  Write-Host "#======  CrashDump copy completed ..."
         scp -o 'ProxyCommand ssh -o ConnectTimeout=300 -p 2022 -W %h:%p azureuser@127.0.0.1' azureuser@${nodeIP}:PktMon* $logPath
+        PktMon etl2txt $logPath\*.etl
         ssh -o ConnectTimeout=300 -o 'ProxyCommand ssh -o ConnectTimeout=300 -p 2022 -W %h:%p azureuser@127.0.0.1' azureuser@${nodeIP} 'powershell -Command "rm PktMon* "'
         return
     }
