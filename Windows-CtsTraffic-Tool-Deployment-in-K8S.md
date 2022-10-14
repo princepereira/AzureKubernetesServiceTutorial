@@ -94,7 +94,7 @@ spec:
 ```
 
 If the above session is ended, resume using below command:
-``
+```
 >> kubectl attach ctstraffic-client -c ctstraffic-client -i -t -n demo
 ```
 
