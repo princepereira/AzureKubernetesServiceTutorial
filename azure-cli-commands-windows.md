@@ -49,6 +49,14 @@ Eg: az account set --subscription 49d938e4-f3e9-446d-b58f-7aa95eb1c123
 PS> az group create --name myResourceGroup --location eastus
 ```
 
+#### List Resource Groups
+```
+PS> az group list --output table | findstr.exe -i pper
+
+pper_npm_rg                                                           eastus              Succeeded
+MC_pper_npm_rg_aksClusterAzureNpm_eastus                              eastus              Succeeded
+MC_pper_npm_rg_aksClusterCalicoNpm_eastus                             eastus              Succeeded
+```
 # 2. Create Kubernetes Cluster
 
 #### Create an AKS cluster (Windows)
