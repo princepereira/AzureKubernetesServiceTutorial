@@ -23,7 +23,7 @@ Write-Host "Create cluster ..."
 az aks create --resource-group $myResourceGroup --name $myAKSCluster --node-count 1 --generate-ssh-keys --vm-set-type VirtualMachineScaleSets --network-plugin azure --network-policy azure --node-vm-size "Standard_DS2_v2" --max-pods 100 --uptime-sla
 
 Write-Host "Adding node pool ..."
-az aks nodepool add --resource-group $myResourceGroup --cluster-name $myAKSCluster --name $myWindowsNodePool --node-count 1 --os-type Windows --os-sku Windows2022 --node-vm-size Standard_D4s_v3 --max-pods 100az 
+az aks nodepool add --resource-group $myResourceGroup --cluster-name $myAKSCluster --name $myWindowsNodePool --node-count 1 --os-type Windows --os-sku Windows2022 --node-vm-size Standard_D4s_v3 --max-pods 100 
 
 # uncomment below line to force pods to be scheduled on windows nodes
 # az aks nodepool update --node-taints CriticalAddonsOnly=true:NoSchedule -n nodepool1 -g $myResourceGroup --cluster-name $myAKSCluster
