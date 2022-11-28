@@ -1,5 +1,7 @@
 # Push images to Azure container Registry (ACR)
 
+Always run commands in elevated powershell commandline.
+
 #### Install docker using : 
 ```
 https://desktop.docker.com/win/main/amd64/Docker%20Desktop%20Installer.exe
