@@ -10,11 +10,11 @@ https://desktop.docker.com/win/main/amd64/Docker%20Desktop%20Installer.exe
 #### Start docker
 Search for __Docker Desktop__ in Start Menu, and select to start docker
 
-
+#### Switch to Windows containers 
 
 #### Check docker is successfully installed
 ```
-docker network ls
+docker ps
 ```
 
 #### Install az cli if not present using : 
