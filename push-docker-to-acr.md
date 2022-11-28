@@ -1,6 +1,9 @@
 # Push images to Azure container Registry (ACR)
 
-#### Install docker using : https://desktop.docker.com/win/main/amd64/Docker%20Desktop%20Installer.exe
+#### Install docker using : 
+```
+https://desktop.docker.com/win/main/amd64/Docker%20Desktop%20Installer.exe
+```
 
 #### Check docker is successfully installed
 ```
