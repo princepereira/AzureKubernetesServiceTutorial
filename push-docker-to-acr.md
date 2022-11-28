@@ -8,7 +8,8 @@ https://desktop.docker.com/win/main/amd64/Docker%20Desktop%20Installer.exe
 ```
 
 #### Start docker
-Search for Docker Desktop in Start Menu, and select to start docker
+Search for __Docker Desktop__ in Start Menu, and select to start docker
+
 
 
 #### Check docker is successfully installed
