@@ -7,6 +7,10 @@ Always run commands in elevated powershell commandline.
 https://desktop.docker.com/win/main/amd64/Docker%20Desktop%20Installer.exe
 ```
 
+#### Start docker
+Search for Docker Desktop in Start Menu, and select to start docker
+
+
 #### Check docker is successfully installed
 ```
 docker network ls
