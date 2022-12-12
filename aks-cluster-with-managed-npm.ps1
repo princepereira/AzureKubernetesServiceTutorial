@@ -28,4 +28,4 @@ az aks nodepool add --resource-group $myResourceGroup --cluster-name $myAKSClust
 # az aks nodepool update --node-taints CriticalAddonsOnly=true:NoSchedule -n nodepool1 -g $myResourceGroup --cluster-name $myAKSCluster
 
 Write-Host "Retrieving credentials ..."
-aks get-credentials -g $myResourceGroup -n $myAKSCluster
+az aks get-credentials -g $myResourceGroup -n $myAKSCluster
