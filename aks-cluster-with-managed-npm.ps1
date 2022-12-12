@@ -1,4 +1,3 @@
-myResourceGroup="pperRgAzNpm"
 $myResourceGroup="pperRgAzNpm"
 $myLocation="eastus2euap"
 $myAKSCluster="pperAksAzNpm"
