@@ -256,7 +256,7 @@ PS> az aks get-upgrades --resource-group myResourceGroup --name myAKSCluster
 #### Upgrade cluster
 ```
 PS> az aks upgrade --resource-group myResourceGroup --name myAKSCluster --kubernetes-version KUBERNETES_VERSION
-Eg: az aks upgrade --resource-group myResourceGroup --name myAKSCluster --kubernetes-version 1.23.3
+Eg: az aks upgrade --resource-group myResourceGroup --name myAKSCluster --kubernetes-version 1.24.6
 ```
 
 #### Get the events while upgrade is going on
