@@ -1,0 +1,339 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: windowsnetworkmetricscm
+data:
+  windowsnetworkmetrics: |
+    
+    param(
+        [string] $NetworkName = "azure",
+        [string[]] $PodNamePrefixes = @(),
+        [int] $TimeIntervalInSeconds = 60
+    )
+
+    class Node {
+        [Pod[]]$Pods = @()
+        [string]$Name
+        [hashtable] $NetworkMetrics = @{}
+    }
+
+    class Pod {
+        [string]$Name
+        [string]$IPAddress
+        [string]$VfpPortGuid
+        [hashtable] $NetworkMetrics = @{}
+    }
+
+    function GetPODName {
+        param (
+            [Parameter(Mandatory=$True)][string[]] $containerIdentifiers,
+            [Object[]] $PodsInfo
+
+        ) 
+        
+        $items = (($PodsInfo | ConvertFrom-Json).items)
+        foreach($podID in $containerIdentifiers)
+        {
+            foreach($item in $items)
+            {
+                if ($item.id -Eq $podID) {
+                    return $item.metadata.name
+                }
+            }
+        }
+
+        return "unknown"
+    }
+
+
+    function GetPortCounter (
+        [string] $portId,
+        [string] $counterName,
+        [string] $Direction,
+        [Object[]] $portCounters
+    )
+    {
+        
+        $counterValue = 0
+        $currDirection = "unknown"
+
+        foreach ($line in $portCounters) {
+
+            if($line.trim() -match "Direction - OUT") {
+                $currDirection = "OUT" 
+            }
+            if($line.trim() -match "Direction - IN") {
+                $currDirection = "IN" 
+            }
+            
+            if($currDirection -match $Direction) {
+                $splitLines = $line.split(":")
+                if ($splitLines.Count -eq 1) { 
+                    continue 
+                }
+
+                $key = $line.split(":")[0].trim()
+                $value = $line.split(":")[1].trim()
+                if ($key -eq $counterName) {
+                    $counterValue = [int]$value
+                }
+                
+            }
+        }
+
+        return $counterValue
+    }
+
+    function GetRuleCounter()
+    {
+      Param(
+            [ValidateNotNullorEmpty()]
+            [string]$port = $(throw "Please provide a value for Port."),
+            [ValidateNotNullorEmpty()]
+            [string]$layer = $(throw "Please provide a value for Layer."),
+            [ValidateNotNullorEmpty()]
+            [string]$group = $(throw "Please provide a value for Group."),
+            [ValidateNotNullorEmpty()]
+            [string]$ruleRegex = $(throw "Please provide a value for RuleRegex."),
+            [ValidateNotNullorEmpty()]
+            [string]$counterName = $(throw "Please provide a value for CounterName.")
+        )
+
+        $output = vfpCtrl.exe /port $port /layer $layer /group $group /get-rule-counter
+
+        $counterValue = -1
+        $foundRule = $false
+        foreach($line in $output) {
+            #write-host $line
+            if ($line -match $ruleRegex) {
+                $foundRule = $true
+            }
+            if ($foundRule -and ($line -match $counterName)) {
+                $token = $line.split()
+                $counterValue = $token[$token.Count - 1]
+                break;
+            }
+        }
+
+        return $counterValue
+    }
+
+
+
+    function PopulatePodMetrics(
+        [Pod] $pod
+    )
+    {
+        $MetricNameToPortCounterMapping = @{
+            "PACKETS_INGRESS_TOTAL" = @{
+                PortCounterName = "Total packets";
+                Direction = "IN"};
+            "PACKETS_EGRESS_TOTAL" = @{
+                PortCounterName = "Total packets";
+                Direction = "OUT"};
+            "BYTES_INGRESS_TOTAL" = @{
+                PortCounterName = "Total bytes";
+                Direction = "IN"};
+            "BYTES_EGRESS_TOTAL" = @{
+                PortCounterName = "Total bytes";
+                Direction = "OUT"};
+            "SYN_PACKETS_INGRESS_TOTAL" = @{
+                PortCounterName = "SYN packets";
+                Direction = "IN"};
+            "SYN_PACKETS_EGRESS_TOTAL" = @{
+                PortCounterName = "SYN packets";
+                Direction = "OUT"};
+            "SYN_ACK_PACKETS_INGRESS_TOTAL" = @{
+                PortCounterName = "SYN-ACK packets";
+                Direction = "IN"};
+            "SYN_ACK_PACKETS_EGRESS_TOTAL" = @{
+                PortCounterName = "SYN-ACK packets";
+                Direction = "OUT"};
+            "FIN_PACKETS_INGRESS_TOTAL" = @{
+                PortCounterName = "FIN packets";
+                Direction = "IN"};
+            "FIN_PACKETS_EGRESS_TOTAL" = @{
+                PortCounterName = "FIN packets";
+                Direction = "OUT"};
+            "RST_PACKETS_INGRESS_TOTAL" = @{
+                PortCounterName = "RST packets";
+                Direction = "IN"};
+            "RST_PACKETS_EGRESS_TOTAL" = @{
+                PortCounterName = "RST packets";
+                Direction = "OUT"};
+            "TCP_CONNS_VERIFIED_INGRESS_TOTAL" = @{
+                PortCounterName = "TCP Connections Verified";
+                Direction = "IN"};
+            "TCP_CONNS_VERIFIED_EGRESS_TOTAL" = @{
+                PortCounterName = "TCP Connections Verified";
+                Direction = "OUT"};
+            "TCP_CONNS_TIMEDOUT_INGRESS_TOTAL" = @{
+                PortCounterName = "TCP Connections Timed Out";
+                Direction = "IN"};
+            "TCP_CONNS_TIMEDOUT_EGRESS_TOTAL" = @{
+                PortCounterName = "TCP Connections Timed Out";
+                Direction = "OUT"};
+            "TCP_CONNS_RESET_INGRESS_TOTAL" = @{
+                PortCounterName = "TCP Connections Reset";
+                Direction = "IN"};
+            "TCP_CONNS_RESET_EGRESS_TOTAL" = @{
+                PortCounterName = "TCP Connections Reset";
+                Direction = "OUT"};
+            "TCP_CONNS_RESET_BY_SYN_INGRESS_TOTAL" = @{
+                PortCounterName = "TCP Connections Reset by SYN";
+                Direction = "IN"};
+            "TCP_CONNS_RESET_BY_SYN_EGRESS_TOTAL" = @{
+                PortCounterName = "TCP Connections Reset by SYN";
+                Direction = "OUT"};
+            "TCP_CONNS_CLOSED_BY_FIN_INGRESS_TOTAL" = @{
+                PortCounterName = "TCP Connections Closed by FIN";
+                Direction = "IN"};
+            "TCP_CONNS_CLOSED_BY_FIN_EGRESS_TOTAL" = @{
+                PortCounterName = "TCP Connections Closed by FIN";
+                Direction = "OUT"};
+            "TCP_HALF_OPEN_TIMEOUTS_INGRESS_TOTAL" = @{
+                PortCounterName = "TCP Half Open Timeouts";
+                Direction = "IN"};
+            "TCP_HALF_OPEN_TIMEOUTS_EGRESS_TOTAL" = @{
+                PortCounterName = "TCP Half Open Timeouts";
+                Direction = "OUT"};
+        }
+
+
+        $portId = $pod.VfpPortGuid
+        $portCounters = vfpctrl.exe /port $portId /get-port-counter
+        
+        foreach ($metricName in $MetricNameToPortCounterMapping.Keys)
+        {
+            $counterName = $MetricNameToPortCounterMapping[$metricName]["PortCounterName"]
+            $direction = $MetricNameToPortCounterMapping[$metricName]["Direction"]
+            $pod.NetworkMetrics[$metricName] = GetPortCounter -portId $portId -counterName $counterName -Direction $direction -portCounters $portCounters
+        }
+
+        # TODO needs refactoring
+        $pod.NetworkMetrics["TCP_CONNECTIONS_PODTOEXTERNAL_TOTAL"] = GetRuleCounter -port $portId -layer "SLB_NAT_LAYER" -group "SLB_GROUP_NAT_IPv4_OUT" -ruleRegex "SNAT_TCP_OUTBOUNDNAT_\w*" -counterName "Matched packets"
+        $pod.NetworkMetrics["UDP_CONNECTIONS_PODTOEXTERNAL_TOTAL"] = GetRuleCounter -port $portId -layer "SLB_NAT_LAYER" -group "SLB_GROUP_NAT_IPv4_OUT" -ruleRegex "SNAT_UDP_OUTBOUNDNAT_\w*" -counterName "Matched packets"
+
+        $pod.NetworkMetrics["DROPPED_TCP_CONNECTIONS_PODTOEXTERNAL_TOTAL"] = GetRuleCounter -port $portId -layer "SLB_NAT_LAYER" -group "SLB_GROUP_NAT_IPv4_OUT" -ruleRegex "SNAT_TCP_OUTBOUNDNAT_\w*" -counterName "Dropped packets"
+        $pod.NetworkMetrics["DROPPED_UDP_CONNECTIONS_PODTOEXTERNAL_TOTAL"] = GetRuleCounter -port $portId -layer "SLB_NAT_LAYER" -group "SLB_GROUP_NAT_IPv4_OUT" -ruleRegex "SNAT_UDP_OUTBOUNDNAT_\w*" -counterName "Dropped packets"
+
+        $pod.NetworkMetrics["PENDING_TCP_CONNECTIONS_PODTOEXTERNAL_TOTAL"] = GetRuleCounter -port $portId -layer "SLB_NAT_LAYER" -group "SLB_GROUP_NAT_IPv4_OUT" -ruleRegex "SNAT_TCP_OUTBOUNDNAT_\w*" -counterName "Pending packets"
+        $pod.NetworkMetrics["PENDING_UDP_CONNECTIONS_PODTOEXTERNAL_TOTAL"] = GetRuleCounter -port $portId -layer "SLB_NAT_LAYER" -group "SLB_GROUP_NAT_IPv4_OUT" -ruleRegex "SNAT_UDP_OUTBOUNDNAT_\w*" -counterName "Pending packets"
+    }
+
+    function PrintMetrics(
+        [Node] $node
+    )
+    {
+        foreach($pod in $node.Pods)
+        {
+            foreach($metric in $pod.NetworkMetrics.Keys) {
+
+                # Format for printing the metric: TimeStamp, NodeName, PODName, PpdIP, MetricName, MetricValue 
+                # Example: 1/31/2023 3:32pm, aksnpwin100000a, tcp-server-95b975fdb-vkv4s, 10.0.0.10, TCP_CONNECTIONS_INGRESS, 787
+
+                $message = "{0}, {1}, {2}, {3}, {4}, {5}" -f (Get-Date).ToString(), $node.Name, $pod.Name, $pod.IpAddress, $metric, $pod.NetworkMetrics[$metric]
+                Write-Host $message
+            }
+        }
+    }
+
+    function isPodNamePresent {
+        param (
+            [Parameter(Mandatory=$True)][string] $podName
+        )
+
+        foreach($podPrefix in $PodNamePrefixes) {
+            if($podName.StartsWith($podPrefix,'CurrentCultureIgnoreCase')) {
+                return $True
+            }
+        }
+
+        return $false
+    }
+
+    function LogNetworkMetrics ()
+    {   
+        # Create the node and pod data
+        $node = [Node]::new()
+        $node.Name = $(hostname)
+        $hnsEndpoints = Get-HnsEndpoint
+        $podsInfo = crictl pods -o json
+        foreach ($endpoint in $hnsEndpoints) {
+            $isremoteEndpoint = ($endpoint.IsRemoteEndpoint -eq $true)
+            if ($isremoteEndpoint -ne $true) {
+                $endpointPortResource = $endpoint.Resources.Allocators | Where-Object Tag -eq "Endpoint Port"
+                $currPortId = $endpointPortResource.EndpointPortGuid
+                $podName = GetPODName -containerIdentifiers $endpoint.SharedContainers -PodsInfo $podsInfo
+                if ($PodNamePrefixes.Length -ne 0 -and !(isPodNamePresent -podName $podName)) {
+                    continue
+                }
+                $pod = [Pod]::new()
+                $pod.Name = $podName
+                $pod.VfpPortGuid = $currPortId
+                $pod.IPAddress = $endpoint.IPAddress
+                $node.Pods += $pod
+            }
+        }
+
+        # Populate the pod metrics
+        foreach($pod in $node.Pods) {
+            PopulatePodMetrics -pod $pod
+        }
+
+        # TODO Populate the node metrics
+
+        #Print data (execute this towards the end)
+        PrintMetrics -node $node
+    }
+
+
+    while($true)
+    {
+        LogNetworkMetrics
+        Sleep $TimeIntervalInSeconds
+    }
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: windowsnetworkmetrics
+  labels:
+    app: windowsnetworkmetrics
+spec:
+  selector:
+    matchLabels:
+      name: windowsnetworkmetrics
+  template:
+    metadata:
+      labels:
+        name: windowsnetworkmetrics
+    spec:
+      volumes:
+      - name: windowsnetworkmetrics
+        configMap:
+          name: windowsnetworkmetricscm
+          items:
+            - key: windowsnetworkmetrics
+              path: windowsnetworkmetrics.ps1
+
+      securityContext:
+        windowsOptions:
+          hostProcess: true
+          runAsUserName: "NT AUTHORITY\\SYSTEM"
+      hostNetwork: true
+      containers:
+      - name: windowsnetworkmetrics
+        image: mcr.microsoft.com/windows/server:ltsc2022
+        args:
+        - powershell.exe
+        - -Command
+        - .\windowsnetworkmetrics.ps1 -PodNamePrefixes pod1,pod2
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+        - mountPath: \windowsnetworkmetrics.ps1
+          subPath: windowsnetworkmetrics.ps1
+          name: windowsnetworkmetrics
+
+      nodeSelector:
+        kubernetes.azure.com/os-sku: Windows2022
