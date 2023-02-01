@@ -85,7 +85,7 @@ az aks create --resource-group pper_npm_rg --name aksClusterCalicoNpm --node-cou
 
 #### Adding addtional nodes / Adding worker nodes:
 ```
-PS> az aks nodepool add --resource-group myResourceGroup --cluster-name myAKSCluster --os-type Windows --name npwin --node-count 1
+PS> az aks nodepool add --resource-group myResourceGroup --cluster-name myAKSCluster --os-type Windows --os-sku Windows2022 --name npwin --node-count 1
 ```
 
 #### Install the aks-preview extension
