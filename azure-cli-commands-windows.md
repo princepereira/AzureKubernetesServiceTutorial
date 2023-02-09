@@ -243,7 +243,7 @@ PS> kubectl get hpa
 
 #### Manually scale AKS Nodes
 ```
-PS> az aks scale --resource-group myResourceGroup --name myAKSCluster --node-count 3
+PS> az aks scale --resource-group myResourceGroup --name myAKSCluster --nodepool-name npwin --node-count 3
 ```
 
 # 5. Upgrade Kubernetes Cluster
