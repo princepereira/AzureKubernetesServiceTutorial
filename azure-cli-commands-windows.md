@@ -59,6 +59,11 @@ MC_pper_npm_rg_aksClusterCalicoNpm_eastus                             eastus    
 ```
 # 2. Create Kubernetes Cluster
 
+#### Find available K8S versions
+```
+PS> az aks get-versions --location westeurope --output table
+```
+
 #### Create an AKS cluster (Windows)
 ```
 Probably this command take 10-30 minutes.
