@@ -57,6 +57,11 @@ pper_npm_rg                                                           eastus    
 MC_pper_npm_rg_aksClusterAzureNpm_eastus                              eastus              Succeeded
 MC_pper_npm_rg_aksClusterCalicoNpm_eastus                             eastus              Succeeded
 ```
+
+#### List available SKUs ina region
+```
+PS> az vm list-skus --location westeurope --all true --resource-type virtualMachines --output table 
+```
 # 2. Create Kubernetes Cluster
 
 #### Find available K8S versions
