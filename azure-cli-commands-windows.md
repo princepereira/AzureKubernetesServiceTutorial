@@ -417,6 +417,7 @@ $rdpVmName = "myRDPVM"
 $image = "win2022datacenter"
 $userName = "azureuser"
 $password = "Administrator@123"
+$nsgRuleName = "tempRDPAccess"
 
 $nodeRgName = az aks show -g $rgName -n $clusterName --query nodeResourceGroup -o tsv
 $vnetName = az network vnet list -g $nodeRgName --query [0].name -o tsv
@@ -424,7 +425,7 @@ $vnetSubnetName = az network vnet subnet list -g $nodeRgName --vnet-name $vnetNa
 $vnetSubnetId = az network vnet subnet show -g $nodeRgName --vnet-name $vnetName --name $vnetSubnetName --query id -o tsv
 $rdpVmIP = az vm create --resource-group $rgName --name $rdpVmName --image $image --admin-username $userName --admin-password $password --subnet $vnetSubnetId --nic-delete-option delete --os-disk-delete-option delete --public-ip-address "myVMPublicIP" --query publicIpAddress -o tsv
 $nsgName = az network nsg list -g $nodeRgName --query [].name -o tsv
-az network nsg rule create --name tempRDPAccess --resource-group $nodeRgName --nsg-name $nsgName --priority 100 --destination-port-range 3389 --protocol Tcp --description "Temporary RDP access to Windows nodes"
+az network nsg rule create --name $nsgRuleName --resource-group $nodeRgName --nsg-name $nsgName --priority 100 --destination-port-range 3389 --protocol Tcp --description "Temporary RDP access to Windows nodes"
 ```
 #### Login to the new VM
 
