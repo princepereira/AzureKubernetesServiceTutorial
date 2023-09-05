@@ -410,7 +410,24 @@ Create the NSG rule:
 PS> az network nsg rule create --name tempRDPAccess --resource-group <CLUSTER_RG> --nsg-name <NSG_NAME> --priority 100 --destination-port-range 3389 --protocol Tcp --description "Temporary RDP access to Windows nodes"
 Eg: PS> az network nsg rule create --name myVMRDPAccess --resource-group myResourceGroup --nsg-name aks-agentpool-42101894-nsg --priority 100 --destination-port-range 3389 --protocol Tcp --description "Temporary RDP access to Windows nodes"
 ```
+```
+$rgName = "pperIpv6Rg"
+$clusterName = "pperAksIpv6"
+$nodeRgName = az aks show -g $rgName -n $clusterName --query nodeResourceGroup -o tsv
+$vnetName = az network vnet list -g $nodeRgName --query [0].name -o tsv
+$vnetSubnetName = az network vnet subnet list -g $nodeRgName --vnet-name $vnetName --query [0].name -o tsv
+$vnetSubnetId = az network vnet subnet show -g $nodeRgName --vnet-name $vnetName --name $vnetSubnetName --query id -o tsv
 
+$rdpVmName = "myRDPVM"
+$image = "win2022datacenter"
+$userName = "azureuser"
+$password = "Administrator@123"
+
+$rdpVmIP = az vm create --resource-group $rgName --name $rdpVmName --image $image --admin-username $userName --admin-password $password --subnet /$vnetSubnetId --nic-delete-option delete --os-disk-delete-option delete --public-ip-address "myVMPublicIP" --query publicIpAddress -o tsv
+
+$nsgName = az network nsg list -g $nodeRgName --query [].name -o tsv
+az network nsg rule create --name tempRDPAccess --resource-group $nodeRgName --nsg-name $nsgName --priority 100 --destination-port-range 3389 --protocol Tcp --description "Temporary RDP access to Windows nodes"
+```
 #### Login to the new VM
 
 ```
